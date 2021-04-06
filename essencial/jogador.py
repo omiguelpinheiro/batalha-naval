@@ -1,10 +1,12 @@
-__all__ = ["consulta_jogador", "registra_jogador"]  # Funções e variáveis que serão importadas com "import jogador"
+from essencial import tabuleiro
+
+__all__ = ["consulta_jogador", "registra_jogador", "_jogadores"]  # O que será importado com "import jogador"
 
 _jogadores: list = []  # Lista de jogadores registrados até o momento.
 
 
 def registra_jogador(nome: str) -> int:
-    """Função que registra em jogadores um jogador.
+    """Função que registra um jogador em _jogadores.
 
     Args:
         nome: Nome do jogador a ser inserido.
@@ -25,6 +27,8 @@ def registra_jogador(nome: str) -> int:
         jogador["id"] = 1
     else:
         return 0
+
+    _registra_tabuleiro(jogador)
 
     _jogadores.append(jogador)
     return 1
@@ -58,3 +62,15 @@ def _lista_jogadores() -> list:
     """
     jogadores = _jogadores
     return jogadores
+
+
+def _registra_tabuleiro(jogador: dict):
+    """Adiciona o tabuleiro ao jogador.
+
+    Args:
+        jogador: Jogador que receberá o tabuleiro.
+
+    """
+    tab = tabuleiro.gera_tabuleiro()
+    jogador["tabuleiro"] = tab
+    return jogador
