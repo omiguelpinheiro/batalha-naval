@@ -27,12 +27,7 @@ def gera_quadrado() -> dict:
         Um quadrado.
 
     """
-    estado = estado.upper()
-    if estado not in ["H", "D", "N", "W"]:
-        quadrado = {"estado": "?", "componentes": componentes}
-        return quadrado
-
-    quadrado = {"estado": estado, "componentes": componentes}
+    quadrado = {"estado": "N", "estado_visivel": "N"}
     return quadrado
 
 
@@ -71,10 +66,11 @@ def altera_estado(quadrado: dict, novo_estado: str) -> dict:
     """
     novo_estado = novo_estado.upper()
     if novo_estado not in ["H", "D", "N", "W"]:
-        quadrado["estado"] = "?"
-        return quadrado
-
-    quadrado["estado"] = novo_estado
+        # Checa erro de estado
+        quadrado["estado"] = "E"
+    else:
+        # Tudo certo
+        quadrado["estado"] = novo_estado
     return quadrado
 
 
