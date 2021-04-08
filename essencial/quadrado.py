@@ -6,17 +6,25 @@ _NUMERO_LINHAS: int = 10  # Número de linhas no tabuleiro
 _NUMERO_COLUNAS: int = 10  # Número de colunas no tabuleiro
 
 
-def gera_quadrado(estado: str, componentes: Optional[dict] = {}) -> dict:
-    """Função que gera um quadrado para ser posicionado no tabuleiro.
+def gera_quadrado() -> dict:
+    """Gera um quadrado para ser posicionado no tabuleiro.
 
-    Args:
-        estado: Estado do quadrado a ser posicionado.
-        componentes: Dicionário especificando onde se encontram as outras
-            partes do navio.
+    O quadrado será um dicionário com entradas "estado" = "N" e
+    "estado_visivel" = "N".
+
+    Os estados possíveis para a chave "estado" são:
+        H se tem um navio mas está oculto.
+        D se tem um navio que foi atacado.
+        N se não tem um navio e não foi atacado.
+        W se não tem um navio e foi atacado.
+
+    Os estados possíveis para a chave "estado_visivel" são:
+        N se não tem um navio e não foi atacado.
+        D se tem um navio que foi atacado.
+        W se não tem um navio e foi atacado.
 
     Returns:
-        O quadrado com estado e componentes incluídos caso o estado passado
-            seja reconhecido ou um quadrado com estado ? caso contrário.
+        Um quadrado.
 
     """
     estado = estado.upper()
@@ -29,16 +37,16 @@ def gera_quadrado(estado: str, componentes: Optional[dict] = {}) -> dict:
 
 
 def consulta_estado(quadrado: dict) -> str:
-    """Função que diz qual a situação do quadrado em questão.
+    """Diz qual o estado interno do quadrado.
 
     Args:
-        quadrado: As informações do quadrado cujo estado deseja-se consultar.
+        quadrado: O quadrado cujo estado deseja-se consultar.
 
     Returns:
         Uma letra representando o estado do quadrado que pode ser:
             H se tem um navio mas está oculto.
             D se tem um navio que foi atacado.
-            N se não tem um navio mas está oculto.
+            N se não tem um navio e não foi atacado.
             W se não tem um navio e foi atacado.
 
     """
@@ -47,20 +55,21 @@ def consulta_estado(quadrado: dict) -> str:
 
 
 def altera_estado(quadrado: dict, novo_estado: str) -> dict:
-    """Função que altera o estado do quadrado para novo_estado.
+    """Altera o estado do quadrado.
 
     Args:
         quadrado: O quadrado cujo estado será alterado.
         novo_estado: O novo estado do quadrado.
 
     Returns:
-        Um quadrado com o estado alterado para ? se o estado passado
-            não puder ser aceito, ou um quadrado com o estado alterado
-            para novo_estado.
+        A função retornará:
+            Um quadrado com o estado alterado para novo_estado caso
+                nenhum problema ocorra.
+            Um quadrado com o estado alterado para E se o estado passado
+                não puder ser aceito.
 
     """
     novo_estado = novo_estado.upper()
-
     if novo_estado not in ["H", "D", "N", "W"]:
         quadrado["estado"] = "?"
         return quadrado
