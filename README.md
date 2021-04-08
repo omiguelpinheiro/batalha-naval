@@ -19,7 +19,7 @@ pytest --cov=essencial -p no:cacheprovider
 ```
 Por:
 
-Leonardo Trote Martins
-Luiza Bretas Junqueira Correa Luiz
-Marina Magagnin Ribeiro
+Leonardo Trote Martins\
+Luiza Bretas Junqueira Correa Luiz\
+Marina Magagnin Ribeiro\
 Miguel Pinheiro da Costa
