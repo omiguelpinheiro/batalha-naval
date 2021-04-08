@@ -3,31 +3,28 @@ from essencial import quadrado
 
 class TestaMetodosQuadrado:
     def testa_gera_quadrado_sucesso(self):
-        quad = {"estado": "H", "componentes": {}}
-        retorno = quadrado.gera_quadrado("H")
+        quad = {"estado": "N", "estado_visivel": "N"}
+        retorno = quadrado.gera_quadrado()
         assert retorno == quad
 
-    def testa_gera_quadrado_falha(self):
-        quad = {"estado": "?", "componentes": {}}
-        retorno = quadrado.gera_quadrado("G")
-        assert retorno == quad
+    def testa_altera_quadrado_estado_sucesso(self):
+        esperado = {"estado": "H", "estado_visivel": "N"}
+        original = quadrado.gera_quadrado()
+        retorno = quadrado.altera_estado(original, "H")
+        assert retorno == esperado
 
-    def testa_gera_quadrado_com_componentes(self):
-        quad = {"estado": "H", "componentes": {"esquerda": False, "cima": True, "direita": False, "baixo": True}}
-        retorno = quadrado.gera_quadrado("H", {"esquerda": False, "cima": True, "direita": False, "baixo": True})
-        assert retorno == quad
+    def testa_altera_quadrado_estado_falha(self):
+        esperado = {"estado": "E", "estado_visivel": "N"}
+        original = quadrado.gera_quadrado()
+        retorno = quadrado.altera_estado(original, "G")
+        assert retorno == esperado
 
-    def testa_consulta_estado(self):
-        quad = quadrado.gera_quadrado("H")
-        retorno = quadrado.consulta_estado(quad)
-        assert retorno == "H"
+    def testa_consulta_numero_linhas(self):
+        esperado = quadrado._NUMERO_LINHAS
+        retorno = quadrado.consulta_numero_linhas()
+        assert retorno == esperado
 
-    def testa_altera_estado_sucesso(self):
-        quad = quadrado.gera_quadrado("H")
-        retorno = quadrado.altera_estado(quad, "N")
-        assert retorno == {"estado": "N", "componentes": {}}
-
-    def testa_altera_estado_falha(self):
-        quad = quadrado.gera_quadrado("H")
-        retorno = quadrado.altera_estado(quad, "F")
-        assert retorno == {"estado": "?", "componentes": {}}
+    def testa_consulta_numero_colunas(self):
+        esperado = quadrado._NUMERO_COLUNAS
+        retorno = quadrado.consulta_numero_colunas()
+        assert retorno == esperado
