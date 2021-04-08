@@ -1,4 +1,4 @@
-from essencial import tabuleiro
+from essencial import quadrado, tabuleiro, util
 
 __all__ = ["consulta_jogador", "registra_jogador", "_jogadores"]  # O que será importado com "import jogador"
 
@@ -6,13 +6,26 @@ _jogadores: list = []  # Lista de jogadores registrados até o momento.
 
 
 def registra_jogador(nome: str) -> int:
-    """Função que registra um jogador em _jogadores.
+    """Registra um novo jogador na partida.
+
+    Jogador é um dicionário com as seguintes chaves:
+        nome (str): O nome do jogador.
+        placar (int): O placar do jogador.
+        navios (dict): Pares chave valor dizendo quantos navios
+            de cada tipo o jogador posicionará. Os pares são do
+            tipo (tipo: int, quantidade: int).
+        posicoes_navios (list): Lista de listas, onde cada lista
+            interior representa as coordenadas de um navio. Inicializa
+            vazia e será populada conforme o jogador for posicionando
+            seus navios.
 
     Args:
-        nome: Nome do jogador a ser inserido.
+        nome: O nome do jogador.
 
     Returns:
-        0 se já existem dois jogadores registrados e 1 caso tenha registrado com sucesso.
+        A função retornará:
+            0: Se já tem 2 jogadores cadastrados.
+            1: O jogador foi cadastrado com sucesso.
 
     """
     jogadores = _lista_jogadores()
@@ -35,8 +48,7 @@ def registra_jogador(nome: str) -> int:
 
 
 def consulta_jogador(id_jogador: int) -> dict:
-    """Função que retorna um dicionário com as informações do jogador
-    especificado por id_jogador.
+    """Retorna informações do jogador.
 
     Args:
         id_jogador: ID do jogador cujas informações deseja-se obter.
