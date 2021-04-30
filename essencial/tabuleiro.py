@@ -10,7 +10,7 @@ def gera_tabuleiro() -> int:
         Retorna o tabuleiro criado.
 
     """
-    tabuleiro = [[{} for coluna in range(quadrado.consulta_numero_colunas())] for linha in range(quadrado.consulta_numero_colunas())]
+    tabuleiro = [[{} for coluna in range(quadrado.consulta_numero_colunas())] for linha in range(quadrado.consulta_numero_linhas())]
     for y, linha in enumerate(tabuleiro):
         for x, coluna in enumerate(linha):
             tabuleiro[y][x] = quadrado.gera_quadrado()
