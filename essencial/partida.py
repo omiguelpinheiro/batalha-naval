@@ -43,8 +43,6 @@ def inicia_partida():
 
     cli.limpa_cli(console)
 
-    jog_id = {nome_jogador_1: 0, nome_jogador_2: 1}
-
     jogador.registra_jogador(nome_jogador_1)
     jogador.registra_jogador(nome_jogador_2)
     
