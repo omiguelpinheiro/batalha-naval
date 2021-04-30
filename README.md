@@ -7,6 +7,9 @@ Para iniciar um jogo:
 ```bash
 git clone https://github.com/omiguelpinheiro/batalha_naval.git
 cd batalha_naval
+```
+Certifique-se que o terminal está em tela cheia e então:
+```bash
 python run.py
 ```
 Para fazer os testes funcionarem libs extras são necessárias, para instala-las certifique-se que está dentro da pasta do jogo que tem o arquivo requirements.txt dentro e execute:
