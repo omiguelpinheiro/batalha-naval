@@ -1,6 +1,7 @@
 import time
 
 from essencial import cli, jogador
+from essencial.banco.bd_partida import *
 
 mensagem_inserir_jogador_1 = "Digite o nome do jogador 1: "
 mensagem_inserir_jogador_2 = "Digite o nome do jogador 2: "
@@ -45,7 +46,9 @@ def inicia_partida():
 
     jogador.registra_jogador(nome_jogador_1)
     jogador.registra_jogador(nome_jogador_2)
-    
+    jogadores = jogador._lista_jogadores()
+    cria_partida_banco(jogadores[0]["id"], jogadores[1]["id"], con)
+
     for id_jogador in id_jogadores:
         while True:
             jog = jogador.consulta_jogador(id_jogador)
@@ -105,7 +108,6 @@ def inicia_partida():
     jogador.posiciona_navio(0, "a8", "H", 0)
 
     jogador.posiciona_navio(0, "a8", "H", 1)
-
 
     while True:
         atacante = jogador.consulta_jogador(id_jogadores[0])
