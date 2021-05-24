@@ -1,6 +1,8 @@
 from essencial import quadrado, tabuleiro, util
+from essencial.banco.bd_jogador import *
 
 __all__ = ["consulta_jogador", "registra_jogador", "_jogadores"]  # O que será importado com "import jogador"
+
 
 _jogadores: list = []  # Lista de jogadores registrados até o momento.
 _tamanho_navios: dict = {0: 5, 1: 4, 2: 3, 3: 2}  # Dicionário de pares chave-valor (tipo_navio, tamanho)
@@ -54,6 +56,20 @@ def registra_jogador(nome: str) -> int:
     _registra_tabuleiro(jogador)
 
     _jogadores.append(jogador)
+
+    # depois dos jogadores criados, vamos colocar no bd
+    cria_tabela_jogador(con)  # criar a tabela
+    tipo1 = jogador["navios"][0]
+    tipo2 = jogador["navios"][1]
+    tipo3 = jogador["navios"][2]
+    tipo4 = jogador["navios"][3]
+
+    cria_jogador_banco(jogador["nome"], tipo1, tipo2, tipo3, tipo4, con)
+    ultimo_id = le_ultimo_id_jogador(con)
+    jogador["id"] = ultimo_id[0]
+    
+
+
     return 1
 
 
