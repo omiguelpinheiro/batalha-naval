@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import connect
 
+
 def conecta_servidor(host="localhost", user="root", password=""):
     try:
         conexao = mysql.connector.connect(
@@ -9,6 +10,7 @@ def conecta_servidor(host="localhost", user="root", password=""):
     except Exception as e:
         print("Conexão não foi aberta", e)
     return conexao
+
 
 def abre_cursor(con):
     try:
@@ -20,6 +22,7 @@ def abre_cursor(con):
     except Exception as e:
         print("Cursor não foi aberto", e)
     return cursor
+
 
 def cria_banco(nome, con):
     try:
@@ -36,6 +39,7 @@ def cria_banco(nome, con):
         print("Banco não foi criado", e)
         return 0
 
+
 def usa_banco(nome, con):
     try:
         cursor = abre_cursor(con)
@@ -49,9 +53,11 @@ def usa_banco(nome, con):
         print("Banco não foi usado", e)
         return 0
 
+
 con = conecta_servidor()
 cria_banco("MODULAR", con)
 usa_banco("MODULAR", con)
+
 
 '''
 # CONSULTA DO QUE FIZEMOS NO PRIMEIRO DIA:
