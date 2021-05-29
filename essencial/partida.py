@@ -212,29 +212,18 @@ def inicia_partida():
 """
 
 # insere os dados parte do jogador no xml. recebe o nome da seção onde será escrita
-
-
-def gera_xml_jogador(pai):
-
+def gera_xml_jogador(pai, n):
     jogadores = jogador._lista_jogadores()
 
     # inclue os dados do jogador
     label_jogadores = pai.createElement("jogadores")
 
-    jogador1 = label_jogadores.createElement("jogador 1")
-    jogador1.setAttribute("id", jogadores[0]["id"])
+    j = label_jogadores.createElement(f"jogador{n+1}")
+    j.setAttribute("id", jogadores[n]["id"])
     for i in range(4):
-        jogador1.setAttribute(f"tipo_{i+1}", navios[0][i])
-
-    jogador2 = label_jogadores.createElement("jogador 2")
-    jogador2.setAttribute("id", jogadores[1]["id"])
-    for i in range(4):
-        jogador2.setAttribute(f"tipo_{i+1}", navios[0][i])
-
-    return
+        j.setAttribute(f"tipo_{i+1}", navios[n][i])
 
 # insere os dados partida no xml. recebe o nome da seção onde será escrita
-
 
 def gera_xml_partida(pai):
 
@@ -254,9 +243,7 @@ def gera_xml_partida(pai):
 
     return
 
-
 def gera_xml_quadrado():
-
     return
 
 
@@ -267,8 +254,10 @@ def gera_xml():
 
     xml = root.createElement('root')
     root.appendChild(xml)
-
-    gera_xml_jogador(root)
+    for i in range(2):
+        gera_xml_jogador(root, i)
     gera_xml_partida(root)
 
     return
+
+gera_xml()
