@@ -2,6 +2,7 @@ import time
 
 from essencial import cli, jogador
 from essencial.banco.bd_partida import *
+from essencial.jogador import _lista_jogadores
 
 from xml.dom import minidom
 
@@ -50,6 +51,7 @@ def inicia_partida():
 
     jogador.registra_jogador(nome_jogador_1)
     jogador.registra_jogador(nome_jogador_2)
+
     jogadores = jogador._lista_jogadores()
 
     id_jogadores[0] = jogadores[0]["id"]
@@ -68,13 +70,13 @@ def inicia_partida():
             cli.escreve_na_tela(
                 0, 28, f"Num      Embarcações            Ocupa     Qtd", console)
             cli.escreve_na_tela(
-                1, 28, f" 0       Porta-aviões       5 Quadrados    {jog['navios'][0]}", console)
+                1, 28, f" 0       Porta-aviões       5 Quadrados    {jog['navios_disponiveis'][0]}", console)
             cli.escreve_na_tela(
-                2, 28, f" 1       Navio-tanque       4 Quadrados    {jog['navios'][1]}", console)
+                2, 28, f" 1       Navio-tanque       4 Quadrados    {jog['navios_disponiveis'][1]}", console)
             cli.escreve_na_tela(
-                3, 28, f" 2     Contratorpedeiro     3 Quadrados    {jog['navios'][2]}", console)
+                3, 28, f" 2     Contratorpedeiro     3 Quadrados    {jog['navios_disponiveis'][2]}", console)
             cli.escreve_na_tela(
-                4, 28, f" 3        Submarino         2 Quadrados    {jog['navios'][3]}", console)
+                4, 28, f" 3        Submarino         2 Quadrados    {jog['navios_disponiveis'][3]}", console)
 
             # Desenha mensagem para selecionar embarcação mais prompt de input
             cli.escreve_na_tela(6, 28, mensagem_selecao_embarcacao, console)
@@ -123,7 +125,7 @@ def inicia_partida():
             else:
                 cli.escreve_na_tela(
                     8, 28, " " * (len(mensagem_erro_barco_falta) + 3), console)
-            conjunto_navios = set(jog["navios"].values())
+            conjunto_navios = set(jog["navios_disponiveis"].values())
             if len(conjunto_navios) == 1 and 0 in conjunto_navios:
                 break
 
@@ -159,6 +161,8 @@ def inicia_partida():
                 13, 0, f"{atacante['nome']} venceu o jogo! Parabéns!", console)
             cli.pede_dado(14, 0, 0, console).decode()
             break
+        if retorno == 3:
+            raise Exception("VOCE DESTRUIU UM NAVIO")
         indice_0 = id_jogadores.pop(0)
         id_jogadores.append(indice_0)
     cli.encerra_cli()
