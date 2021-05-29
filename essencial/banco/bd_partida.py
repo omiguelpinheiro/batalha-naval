@@ -44,7 +44,7 @@ def le_ultimo_id_partida(con):
         last_id = cursor.fetchone()
         print(cursor.rowcount, "Id partida retornado")
         cursor.close()
-        return last_id
+        return last_id[0]
     except Exception as e:
         print("Id partida não retornado", e)
         return 0

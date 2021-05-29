@@ -26,10 +26,7 @@ mensagem_pede_ataque = "Jogador 0 | Qual quadrante deseja atacar? (Ex. A-8, h-2,
 
 mensagem_erro_quadrado_ja_atacado = "Último erro: esse quadrado já foi atacado."
 
-id_jogador_1 = 0
-id_jogador_2 = 1
-
-id_jogadores = [id_jogador_1, id_jogador_2]
+id_jogadores = [None, None]
 
 navios = {0: "porta_aviao", 1: "navio_tanque",
           2: "contratorpedeiro", 3: "submarino"}
@@ -54,7 +51,11 @@ def inicia_partida():
     jogador.registra_jogador(nome_jogador_1)
     jogador.registra_jogador(nome_jogador_2)
     jogadores = jogador._lista_jogadores()
-    cria_partida_banco(jogadores[0]["id"], jogadores[1]["id"], con)
+
+    id_jogadores[0] = jogadores[0]["id"]
+    id_jogadores[1] = jogadores[1]["id"]
+
+    cria_partida_banco(jogadores[0]["id_banco"], jogadores[1]["id_banco"], con)
 
     for id_jogador in id_jogadores:
         while True:
