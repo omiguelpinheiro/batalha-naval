@@ -7,9 +7,9 @@ def conecta_servidor(host="localhost", user="root", password=""):
         conexao = mysql.connector.connect(
             host=host, user=user, password=password)
         print("Conexão aberta")
+        return conexao
     except Exception as e:
         print("Conexão não foi aberta", e)
-    return conexao
 
 
 def abre_cursor(con):
