@@ -72,3 +72,5 @@ def deleta_jogador(coluna_condicao, condicao, con):
     except Exception as e:
         print("Não removeu o jogador", e)
         return 0
+
+cria_tabela_jogador(con)  # criar a tabela
