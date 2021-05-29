@@ -34,15 +34,16 @@ def registra_jogador(nome: str) -> int:
     jogadores = _lista_jogadores()
 
     jogador = dict()
+    jogador["navios"] = list()
     jogador["nome"] = nome
     jogador["placar"] = 0
-    jogador["navios"] = {0: 1, 1: 2, 2: 0, 3: 2}
+    jogador["navios_disponiveis"] = {0: 0, 1: 0, 2: 0, 3: 1}
     jogador["posicoes_navios"] = []
 
     maximo_pontos = 0
     if maximo_pontos == 0:
-        for navio in jogador["navios"]:
-            maximo_pontos += jogador["navios"][navio] * _tamanho_navios[navio]
+        for navio in jogador["navios_disponiveis"]:
+            maximo_pontos += jogador["navios_disponiveis"][navio] * _tamanho_navios[navio]
 
     jogador["maximo_pontos"] = maximo_pontos
 
@@ -55,20 +56,18 @@ def registra_jogador(nome: str) -> int:
 
     _registra_tabuleiro(jogador)
 
-    _jogadores.append(jogador)
-
     # depois dos jogadores criados, vamos colocar no bd
-    cria_tabela_jogador(con)  # criar a tabela
-    tipo1 = jogador["navios"][0]
-    tipo2 = jogador["navios"][1]
-    tipo3 = jogador["navios"][2]
-    tipo4 = jogador["navios"][3]
+    tipo1 = jogador["navios_disponiveis"][0]
+    tipo2 = jogador["navios_disponiveis"][1]
+    tipo3 = jogador["navios_disponiveis"][2]
+    tipo4 = jogador["navios_disponiveis"][3]
 
     cria_jogador_banco(jogador["nome"], tipo1, tipo2, tipo3, tipo4, con)
     ultimo_id = le_ultimo_id_jogador(con)
     jogador["id"] = ultimo_id[0]
     
 
+    _jogadores.append(jogador)
 
     return 1
 
@@ -142,9 +141,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
         return -1
     if orientacao not in ["V", "H"]:
         return -2
-    if id_jogador not in [0, 1]:
-        return -3
-    if consulta_jogador(id_jogador)["navios"][id_navio] <= 0:
+    if consulta_jogador(id_jogador)["navios_disponiveis"][id_navio] <= 0:
         return -4
     if int(quadrado_inicio[1]) + 1 - tamanho_navio < 0 and orientacao == "H":
         return -5
@@ -152,7 +149,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
         return -6
 
     coordenada_navio = list()
-
+        
     if orientacao == "V":
         for parte in range(tamanho_navio):
             coordenada_navio.append([numero_linha - parte, numero_coluna + 1])
@@ -160,13 +157,16 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
         for parte in range(tamanho_navio):
             coordenada_navio.append([numero_linha, numero_coluna - parte + 1])
 
-    for navio in _jogadores[id_jogador]["posicoes_navios"]:
-        for coord in navio:
-            if coord in coordenada_navio:
+
+    for navio in _jogadores[id_jogador]["navios"]:
+       for parte in navio["ocupando"]:
+          if parte in coordenada_navio:
                 return -7
 
-    _jogadores[id_jogador]["posicoes_navios"].append(coordenada_navio)
-    _jogadores[id_jogador]["navios"][id_navio] -= 1
+    navio = {"tipo": id_navio, "ocupando": coordenada_navio, "destruido": False}
+
+    _jogadores[id_jogador]["navios"].append(navio)
+    _jogadores[id_jogador]["navios_disponiveis"][id_navio] -= 1
 
     if orientacao == "V":
         for parte in range(tamanho_navio):
@@ -178,7 +178,6 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
             quadrado_original = _jogadores[id_jogador]["tabuleiro"][numero_linha][numero_coluna - parte]
             quadrado_novo = quadrado.altera_estado(quadrado_original, "H")
             _jogadores[id_jogador]["tabuleiro"][numero_linha][numero_coluna - parte] = quadrado_novo
-
     return 1
 
 
@@ -216,6 +215,11 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str):
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado_visivel"] = "D"
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado"] = "D"
         _jogadores[id_atacante]["placar"] += 1
+        for i, navio in enumerate(_jogadores[id_atacado]["navios"]):
+            if [numero_linha, numero_coluna] in navio["ocupando"]:
+                _jogadores[id_atacado]["navios"][i]["ocupando"].remove([numero_linha, numero_coluna])
+                if len(_jogadores[id_atacado]["navios"][i]["ocupando"]) == 0:
+                    return 3
         if _jogadores[id_atacante]["placar"] == _jogadores[id_atacante]["maximo_pontos"]:
             return 1
     if estado_quadrado == "N":
