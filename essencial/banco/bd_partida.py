@@ -1,5 +1,7 @@
 from essencial.banco.conector import abre_cursor, con
 
+# cria a tabela partida no banco
+
 
 def cria_tabela_partida(con):
     try:
@@ -21,6 +23,9 @@ def cria_tabela_partida(con):
         print("Tabela Jogador não foi criada", e)
         return 0
 
+# insere valores na tabela partida
+
+
 def cria_partida_banco(id_jogador1, id_jogador2, con):
     try:
         cursor = abre_cursor(con)
@@ -34,6 +39,9 @@ def cria_partida_banco(id_jogador1, id_jogador2, con):
     except Exception as e:
         print("Não inseriu a partida", e)
         return 0
+
+# le o ultimo id de partida inserido na tabela
+
 
 def le_ultimo_id_partida(con):
     try:
@@ -49,6 +57,8 @@ def le_ultimo_id_partida(con):
         print("Id partida não retornado", e)
         return 0
 
+# atualiza algum row da tabela partida
+
 
 def atualiza_partida(coluna, novo_valor, coluna_condicao, condicao, con):
     try:
@@ -63,18 +73,37 @@ def atualiza_partida(coluna, novo_valor, coluna_condicao, condicao, con):
         print("Não atualizou a partida", e)
         return 0
 
+# remove algum row da tabela partida
 
-def deleta_partida(coluna_condicao, condicao, con):
+
+def deleta_row_partida(coluna_condicao, condicao, con):
     try:
         cursor = abre_cursor(con)
         query = f"DELETE FROM Partida WHERE {coluna_condicao}={condicao}"
         cursor.execute(query)
         con.commit()
-        print(cursor.rowcount, "Partida removida")
+        print(cursor.rowcount, "Rows em Partida removidos")
         cursor.close()
         return 1
     except Exception as e:
-        print("Não removeu a partida", e)
+        print("Rows em Partida não foram removidos", e)
         return 0
+
+# remove a tabela partida do banco
+
+
+def drop_tabela_partida(con):
+    try:
+        cursor = abre_cursor(con)
+        query = f"DROP Partida"
+        cursor.execute(query)
+        con.commit()
+        print(cursor.rowcount, "Tabela Partida removida")
+        cursor.close()
+        return 1
+    except Exception as e:
+        print("Não removeu a Tabela Partida", e)
+        return 0
+
 
 cria_tabela_partida(con)

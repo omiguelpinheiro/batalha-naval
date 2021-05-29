@@ -1,4 +1,6 @@
-from essencial.banco.conector import abre_cursor, conecta_servidor
+from essencial.banco.conector import abre_cursor, con, conecta_servidor
+
+# cria tabela quadrado no banco
 
 
 def cria_tabela_quadrado(con):
@@ -22,6 +24,8 @@ def cria_tabela_quadrado(con):
         print("Tabela Quadrado não foi criada", e)
         return 0
 
+# insere valores no banco quadrado
+
 
 def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, con):
     try:
@@ -35,6 +39,8 @@ def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, con):
     except Exception as e:
         print("Não inseriu o quadrado", e)
         return 0
+
+# atualiza algum row na tabela quadrado
 
 
 def atualiza_quadrado(coluna, novo_valor, coluna_condicao, condicao, con):
@@ -50,18 +56,37 @@ def atualiza_quadrado(coluna, novo_valor, coluna_condicao, condicao, con):
         print("Não atualizou o quadrado", e)
         return 0
 
+# remove algum row na tabela quadrado
 
-def deleta_partida(coluna_condicao, condicao, con):
+
+def deleta_row_quadrado(coluna_condicao, condicao, con):
     try:
         cursor = abre_cursor(con)
         query = f"DELETE FROM Quadrado WHERE {coluna_condicao}={condicao}"
         cursor.execute(query)
         con.commit()
-        print(cursor.rowcount, "Quadrado removido")
+        print(cursor.rowcount, "Rows em Quadrado removidos")
         cursor.close()
         return 1
     except Exception as e:
-        print("Não removeu o quadrado", e)
+        print("Rows em Quadrado não foram removidos", e)
         return 0
+
+# remove a tabela quadrado do banco
+
+
+def drop_tabela_quadrado(con):
+    try:
+        cursor = abre_cursor(con)
+        query = f"DROP Quadrado"
+        cursor.execute(query)
+        con.commit()
+        print(cursor.rowcount, "Tabela Quadrado removida")
+        cursor.close()
+        return 1
+    except Exception as e:
+        print("Não removeu a Tabela Quadrado", e)
+        return 0
+
 
 cria_tabela_quadrado(con)

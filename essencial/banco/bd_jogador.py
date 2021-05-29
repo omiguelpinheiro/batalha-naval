@@ -1,5 +1,8 @@
 from essencial.banco.conector import abre_cursor, con
 
+# cria a tabela jogador em um banco de dados
+
+
 def cria_tabela_jogador(con):
     try:
         cursor = abre_cursor(con)
@@ -19,6 +22,9 @@ def cria_tabela_jogador(con):
         print("Tabela Jogador não foi criada", e)
         return 0
 
+# insere valores na tabela jogador
+
+
 def cria_jogador_banco(nome, tipo_1, tipo_2, tipo_3, tipo_4, con):
     try:
         cursor = abre_cursor(con)
@@ -31,6 +37,9 @@ def cria_jogador_banco(nome, tipo_1, tipo_2, tipo_3, tipo_4, con):
     except Exception as e:
         print("Não inseriu o jogador", e)
         return 0
+
+# le o ultimo id jogador inserido
+
 
 def le_ultimo_id_jogador(con):
     try:
@@ -46,6 +55,9 @@ def le_ultimo_id_jogador(con):
         print("Id jogador não retornado", e)
         return 0
 
+# atualiza algum row na tabela jogador
+
+
 def atualiza_jogador(coluna, novo_valor, coluna_condicao, condicao, con):
     try:
         cursor = abre_cursor(con)
@@ -59,18 +71,37 @@ def atualiza_jogador(coluna, novo_valor, coluna_condicao, condicao, con):
         print("Não atualizou a tabela Jogador", e)
         return 0
 
+# deleta algum row na tabela jogador
 
-def deleta_jogador(coluna_condicao, condicao, con):
+
+def deleta_row_jogador(coluna_condicao, condicao, con):
     try:
         cursor = abre_cursor(con)
         query = f"DELETE FROM Jogador WHERE {coluna_condicao}={condicao}"
         cursor.execute(query)
         con.commit()
-        print(cursor.rowcount, "Jogador removido")
+        print(cursor.rowcount, "Rows em Jogador removidos")
         cursor.close()
         return 1
     except Exception as e:
-        print("Não removeu o jogador", e)
+        print("Rows em Jogador não foram removidos", e)
         return 0
+
+# remove a tabela jogador
+
+
+def drop_tabela_jogador(con):
+    try:
+        cursor = abre_cursor(con)
+        query = f"DROP Jogador"
+        cursor.execute(query)
+        con.commit()
+        print(cursor.rowcount, "Tabela Jogador removida")
+        cursor.close()
+        return 1
+    except Exception as e:
+        print("Não removeu a Tabela Jogador", e)
+        return 0
+
 
 cria_tabela_jogador(con)  # criar a tabela
