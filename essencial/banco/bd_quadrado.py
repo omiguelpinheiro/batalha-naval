@@ -63,3 +63,5 @@ def deleta_partida(coluna_condicao, condicao, con):
     except Exception as e:
         print("Não removeu o quadrado", e)
         return 0
+
+cria_tabela_quadrado(con)
