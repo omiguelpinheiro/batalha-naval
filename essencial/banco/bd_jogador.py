@@ -41,7 +41,7 @@ def le_ultimo_id_jogador(con):
         last_id = cursor.fetchone()
         print(cursor.rowcount, "Id jogador retornado")
         cursor.close()
-        return last_id
+        return last_id[0]
     except Exception as e:
         print("Id jogador não retornado", e)
         return 0
