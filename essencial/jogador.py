@@ -151,7 +151,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
         
     if orientacao == "V":
         for parte in range(tamanho_navio):
-            coordenada_navio.append([numero_linha - parte, numero_coluna + 1])
+            coordenada_navio.append([numero_linha - parte, numero_coluna])
     elif orientacao == "H":
         for parte in range(tamanho_navio):
             coordenada_navio.append([numero_linha, numero_coluna - parte + 1])
