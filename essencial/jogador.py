@@ -64,8 +64,7 @@ def registra_jogador(nome: str) -> int:
 
     cria_jogador_banco(jogador["nome"], tipo1, tipo2, tipo3, tipo4, con)
     ultimo_id = le_ultimo_id_jogador(con)
-    jogador["id"] = ultimo_id[0]
-    
+    jogador["id_banco"] = ultimo_id
 
     _jogadores.append(jogador)
 
