@@ -2,10 +2,9 @@ import time
 
 from essencial import cli, jogador
 from essencial.banco.conector import con
-from essencial.banco.bd_partida import drop_tabela_partida, cria_partida_banco
+from essencial.banco.bd_partida import finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida
 from essencial.banco.bd_jogador import drop_tabela_jogador
 from essencial.banco.bd_quadrado import drop_tabela_quadrado
-from essencial.jogador import _lista_jogadores
 
 from xml.dom import minidom
 
@@ -61,6 +60,7 @@ def inicia_partida():
         id_jogadores[1] = jogadores[1]["id"]
 
         cria_partida_banco(jogadores[0]["id_banco"], jogadores[1]["id_banco"], con)
+        id_partida = le_ultimo_id_partida(con)
 
         for id_jogador in id_jogadores:
             while True:
@@ -162,6 +162,7 @@ def inicia_partida():
                                 jogador.consulta_jogador(1))
                 cli.escreve_na_tela(
                     13, 0, f"{atacante['nome']} venceu o jogo! Parabéns!", console)
+                finaliza_partida(id_partida, con)
                 cli.pede_dado(14, 0, 0, console).decode()
                 break
             if retorno == 3:
@@ -175,3 +176,4 @@ def inicia_partida():
         drop_tabela_partida(con)
         drop_tabela_quadrado(con)
         drop_tabela_jogador(con)
+        pass

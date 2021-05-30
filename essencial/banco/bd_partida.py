@@ -60,10 +60,10 @@ def le_ultimo_id_partida(con):
 # atualiza algum row da tabela partida
 
 
-def atualiza_partida(coluna, novo_valor, coluna_condicao, condicao, con):
+def finaliza_partida(id_partida, con):
     try:
         cursor = abre_cursor(con)
-        query = f"UPDATE Partida SET {coluna}={novo_valor} WHERE {coluna_condicao}={condicao}"
+        query = f"UPDATE Partida SET finalizada=TRUE WHERE id_partida={id_partida}"
         cursor.execute(query)
         con.commit()
         print(cursor.rowcount, "Partida atualizada")
