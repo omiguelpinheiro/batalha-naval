@@ -199,7 +199,7 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str):
         A função retornará:
             3: Jogador foi atacado com sucesso e teve um navio destruído.
             2: Jogador foi atacado com sucesso.
-            1: jogador foi atacado com sucesso e ocorreu vitária do atacante.
+            1: jogador foi atacado com sucesso e ocorreu vitória do atacante.
            -1: Coordenada de quadrante inválida.
            -2: Coordenada de quadrante já foi atacada.
     """
