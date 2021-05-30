@@ -31,8 +31,7 @@ id_jogadores = [None, None]
 
 navios = {0: "porta_aviao", 1: "navio_tanque",
           2: "contratorpedeiro", 3: "submarino"}
-
-
+          
 def inicia_partida():
     console = cli.inicia_cli()
 
@@ -166,98 +165,3 @@ def inicia_partida():
         indice_0 = id_jogadores.pop(0)
         id_jogadores.append(indice_0)
     cli.encerra_cli()
-
-
-"""
-<?xml version="1.0" ?>
-<root>
-
-    <jogadores>
-        <jogador_1>
-            <id> int </id>
-            <nome> varchar </nome>
-            <tipo_1> int </tipo_1>
-            <tipo_2> int </tipo_2>
-            <tipo_3> int </tipo_3>
-            <tipo_4> int </tipo_4>
-            </jogador_1>
-
-        <jogador_2>
-            <id> int </id>
-            <nome> varchar </nome>
-            <tipo_1> int </tipo_1>
-            <tipo_2> int </tipo_2>
-            <tipo_3> int </tipo_3>
-            <tipo_4> int </tipo_4>
-            </jogador_2>
-    </jogadores>
-
-    <partida>
-        <id_ultima_partida> int </id_ultima_partida>
-        <id> int </id>
-        <id> int </id>
-        <n_ultima_jogada> int </n_ultima_jogada>
-        <finalizada> bool </finalizada>
-    </partida>
-
-
-    <quadrado>
-
-
-    </quadrado>
-
-
-
-</root>
-"""
-
-# insere os dados parte do jogador no xml. recebe o nome da seção onde será escrita
-def gera_xml_jogador(pai, n):
-    jogadores = jogador._lista_jogadores()
-
-    # inclue os dados do jogador
-    label_jogadores = pai.createElement("jogadores")
-
-    j = label_jogadores.createElement(f"jogador{n+1}")
-    j.setAttribute("id", jogadores[n]["id"])
-    for i in range(4):
-        j.setAttribute(f"tipo_{i+1}", navios[n][i])
-
-# insere os dados partida no xml. recebe o nome da seção onde será escrita
-
-def gera_xml_partida(pai):
-
-    jogadores = jogador._lista_jogadores()
-    id_partida = le_ultimo_id_partida()
-
-    # inclui os dados a partida
-    partida = pai.createElement("partida")
-    # nao preciso no id no resto do programa. so aqui.
-
-    partida.setAttribute("id_ultima_partida", id_partida)
-    for i in range(2):
-        partida.setAttribute(f"jogador {i}", jogadores[i]["id"])
-
-    partida.setAttribute("n_ultima_jogada", 1)
-    partida.setAttribute("finalizada", 0)
-
-    return
-
-def gera_xml_quadrado():
-    return
-
-
-def gera_xml():
-
-    # base do documento
-    root = minidom.Document()
-
-    xml = root.createElement('root')
-    root.appendChild(xml)
-    for i in range(2):
-        gera_xml_jogador(root, i)
-    gera_xml_partida(root)
-
-    return
-
-gera_xml()

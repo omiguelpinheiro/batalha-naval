@@ -1,3 +1,4 @@
+from essencial.banco.bd_quadrado import atualiza_quadrado, cria_quadrado_banco, cria_tabela_quadrado, retorna_ultima_jogada
 from essencial import quadrado, tabuleiro, util
 from essencial.banco.bd_jogador import *
 
@@ -54,8 +55,6 @@ def registra_jogador(nome: str) -> int:
     else:
         return 0
 
-    _registra_tabuleiro(jogador)
-
     # depois dos jogadores criados, vamos colocar no bd
     tipo1 = jogador["navios_disponiveis"][0]
     tipo2 = jogador["navios_disponiveis"][1]
@@ -65,6 +64,8 @@ def registra_jogador(nome: str) -> int:
     cria_jogador_banco(jogador["nome"], tipo1, tipo2, tipo3, tipo4, con)
     ultimo_id = le_ultimo_id_jogador(con)
     jogador["id_banco"] = ultimo_id
+
+    _registra_tabuleiro(jogador)
 
     _jogadores.append(jogador)
 
@@ -172,11 +173,15 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
             quadrado_original = _jogadores[id_jogador]["tabuleiro"][numero_linha - parte][numero_coluna]
             quadrado_novo = quadrado.altera_estado(quadrado_original, "H")
             _jogadores[id_jogador]["tabuleiro"][numero_linha - parte][numero_coluna] = quadrado_novo
+            # Adicionar navio no banco na vertical
+            atualiza_quadrado(_jogadores[id_jogador]["id_banco"], numero_linha - parte, numero_coluna, 0, "H", len(_jogadores[id_jogador]["navios"] - 1, con))
     elif orientacao == "H":
         for parte in range(tamanho_navio):
             quadrado_original = _jogadores[id_jogador]["tabuleiro"][numero_linha][numero_coluna - parte]
             quadrado_novo = quadrado.altera_estado(quadrado_original, "H")
             _jogadores[id_jogador]["tabuleiro"][numero_linha][numero_coluna - parte] = quadrado_novo
+            # ADicionar navio no banco na horizontal
+            atualiza_quadrado(_jogadores[id_jogador]["id_banco"], numero_linha, numero_coluna - parte, 0, "H", len(_jogadores[id_jogador]["navios"]) - 1, con)
     return 1
 
 
@@ -218,14 +223,15 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str):
         for i, navio in enumerate(_jogadores[id_atacado]["navios"]):
             if [numero_linha, numero_coluna] in navio["ocupando"]:
                 _jogadores[id_atacado]["navios"][i]["ocupando"].remove([numero_linha, numero_coluna])
-                if len(_jogadores[id_atacado]["navios"][i]["ocupando"]) == 0:
+                cria_quadrado_banco(_jogadores[id_atacado]["id_banco"], numero_linha, numero_coluna, retorna_ultima_jogada(_jogadores[0]["id_banco"], _jogadores[1]["id_banco"], con) + 1, "D", i, con)
+                if len(_jogadores[id_atacado]["navios"][i]["ocupando"]) == 0 and _jogadores[id_atacante]["placar"] == _jogadores[id_atacante]["maximo_pontos"]:
+                    return 1
+                elif len(_jogadores[id_atacado]["navios"][i]["ocupando"]) == 0:
                     return 3
-        if _jogadores[id_atacante]["placar"] == _jogadores[id_atacante]["maximo_pontos"]:
-            return 1
     if estado_quadrado == "N":
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado"] = "W"
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado_visivel"] = "W"
-
+        cria_quadrado_banco(_jogadores[id_atacado]["id_banco"], numero_linha, numero_coluna, retorna_ultima_jogada(_jogadores[0]["id_banco"], _jogadores[1]["id_banco"], con) + 1, "W", -1, con)
     return 2
 
 
@@ -247,6 +253,7 @@ def _registra_tabuleiro(jogador: dict):
         jogador: Jogador que receberá o tabuleiro.
 
     """
-    tab = tabuleiro.gera_tabuleiro()
+    cria_tabela_quadrado(con)
+    tab = tabuleiro.gera_tabuleiro(jogador["id_banco"])
     jogador["tabuleiro"] = tab
     return jogador
