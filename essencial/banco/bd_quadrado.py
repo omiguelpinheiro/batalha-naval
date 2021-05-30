@@ -26,15 +26,12 @@ def cria_tabela_quadrado(con):
 # insere valores no banco quadrado
 
 
-def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, id_navio, con, log=False):
+def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, id_navio, cursor, log=False):
     try:
-        cursor = abre_cursor(con)
         query = f"INSERT INTO Quadrado(id_dono, linha, coluna, n_jogada, estado, id_navio) VALUES ({id_dono}, {linha}, {coluna}, {n_jogada}, '{estado}', {id_navio})"
         cursor.execute(query)
-        con.commit()
         if log:
             print(cursor.rowcount, "Quadrado inserido")
-        cursor.close()
         return 1
     except Exception as e:
         print("Não inseriu o quadrado", e)

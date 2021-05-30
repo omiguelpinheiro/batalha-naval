@@ -2,7 +2,7 @@ import mysql.connector
 from mysql.connector import connect
 
 
-def conecta_servidor(host="localhost", user="root", password=""):
+def conecta_servidor(host="localhost", user="root", password="root"):
     try:
         conexao = mysql.connector.connect(
             host=host, user=user, password=password)
@@ -24,15 +24,13 @@ def abre_cursor(con):
     return cursor
 
 
-def cria_banco(nome, con):
+def cria_banco(con, nome="Modular"):
     try:
         cursor = abre_cursor(con)
         query = f"CREATE DATABASE {nome}"
         cursor.execute(query)
         con.commit()
         print("Banco {nome} foi criado")
-        cursor.execute(f"USE {nome}")
-        print(f"Usando banco {nome}")
         cursor.close()
         return 1
     except Exception as e:
@@ -40,7 +38,7 @@ def cria_banco(nome, con):
         return 0
 
 
-def usa_banco(nome, con):
+def usa_banco(con, nome="Modular"):
     try:
         cursor = abre_cursor(con)
         query = f"USE {nome}"
@@ -54,6 +52,6 @@ def usa_banco(nome, con):
         return 0
 
 
-con = conecta_servidor(password="123")
-cria_banco("Modular", con)
-usa_banco("Modular", con)
+con = conecta_servidor()
+cria_banco(con)
+usa_banco(con)
