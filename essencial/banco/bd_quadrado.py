@@ -1,12 +1,9 @@
-from essencial.banco.conector import abre_cursor, con, conecta_servidor
-
 # cria tabela quadrado no banco
 
 
-def cria_tabela_quadrado(con):
+def cria_tabela_quadrado(current_cursor):
     try:
-        cursor = abre_cursor(con)
-        cursor.execute("CREATE TABLE Quadrado ( \
+        current_cursor.execute("CREATE TABLE Quadrado ( \
             id_dono INT NOT NULL, \
             linha CHAR(1) NOT NULL, \
             coluna CHAR(1) NOT NULL, \
@@ -15,9 +12,7 @@ def cria_tabela_quadrado(con):
             id_navio INT NOT NULL, \
             PRIMARY KEY (id_dono, linha, coluna, n_jogada), \
             CONSTRAINT FK_JogadorQuadrado FOREIGN KEY (id_dono) REFERENCES Jogador(id_jogador))")
-        con.commit()
         print("Tabela Quadrado criada")
-        cursor.close()
         return 1
     except Exception as e:
         print("Tabela Quadrado não foi criada", e)
@@ -26,12 +21,12 @@ def cria_tabela_quadrado(con):
 # insere valores no banco quadrado
 
 
-def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, id_navio, cursor, log=False):
+def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, id_navio, current_cursor, log=False):
     try:
         query = f"INSERT INTO Quadrado(id_dono, linha, coluna, n_jogada, estado, id_navio) VALUES ({id_dono}, {linha}, {coluna}, {n_jogada}, '{estado}', {id_navio})"
-        cursor.execute(query)
+        current_cursor.execute(query)
         if log:
-            print(cursor.rowcount, "Quadrado inserido")
+            print(current_cursor.rowcount, "Quadrado inserido")
         return 1
     except Exception as e:
         print("Não inseriu o quadrado", e)
@@ -40,14 +35,11 @@ def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, id_navio, curs
 # atualiza algum row na tabela quadrado
 
 
-def atualiza_quadrado(id_dono, linha, coluna, n_jogada, novo_estado, novo_id_navio, con):
+def atualiza_quadrado(id_dono, linha, coluna, n_jogada, novo_estado, novo_id_navio, current_cursor):
     try:
-        cursor = abre_cursor(con)
         query = f"UPDATE Quadrado SET estado = '{novo_estado}', id_navio = {novo_id_navio} WHERE id_dono = {id_dono} AND linha = {linha} AND coluna = {coluna} AND n_jogada = {n_jogada}"
-        cursor.execute(query)
-        con.commit()
-        print(cursor.rowcount, "Quadrado atualizado")
-        cursor.close()
+        current_cursor.execute(query)
+        print(current_cursor.rowcount, "Quadrado atualizado")
         return 1
     except Exception as e:
         print("Não atualizou o quadrado", e)
@@ -56,14 +48,11 @@ def atualiza_quadrado(id_dono, linha, coluna, n_jogada, novo_estado, novo_id_nav
 # remove algum row na tabela quadrado
 
 
-def deleta_row_quadrado(coluna_condicao, condicao, con):
+def deleta_row_quadrado(coluna_condicao, condicao, current_cursor):
     try:
-        cursor = abre_cursor(con)
         query = f"DELETE FROM Quadrado WHERE {coluna_condicao}={condicao}"
-        cursor.execute(query)
-        con.commit()
-        print(cursor.rowcount, "Rows em Quadrado removidos")
-        cursor.close()
+        current_cursor.execute(query)
+        print(current_cursor.rowcount, "Rows em Quadrado removidos")
         return 1
     except Exception as e:
         print("Rows em Quadrado não foram removidos", e)
@@ -72,36 +61,27 @@ def deleta_row_quadrado(coluna_condicao, condicao, con):
 # remove a tabela quadrado do banco
 
 
-def drop_tabela_quadrado(con):
+def drop_tabela_quadrado(current_cursor):
     try:
-        cursor = abre_cursor(con)
         query = f"DROP TABLE Quadrado"
-        cursor.execute(query)
-        con.commit()
-        print(cursor.rowcount, "Tabela Quadrado removida")
-        cursor.close()
+        current_cursor.execute(query)
+        print(current_cursor.rowcount, "Tabela Quadrado removida")
         return 1
     except Exception as e:
         print("Não removeu a Tabela Quadrado", e)
         return 0
 
-def retorna_ultima_jogada(id_jogador_1, id_jogador_2, con):
+def retorna_ultima_jogada(id_jogador_1, id_jogador_2, current_cursor):
     try:
-        cursor = abre_cursor(con)
         query_1 = f"SELECT MAX(n_jogada) FROM Quadrado WHERE id_dono = {id_jogador_1}"
-        cursor.execute(query_1)
-        con.commit()
-        max_jogador_1 = cursor.fetchone()[0]
+        current_cursor.execute(query_1)
+        max_jogador_1 = current_cursor.fetchone()[0]
         query_2 = f"SELECT MAX(n_jogada) FROM Quadrado WHERE id_dono = {id_jogador_2}"
-        cursor.execute(query_2)
-        con.commit()
-        max_jogador_2 = cursor.fetchone()[0]
+        current_cursor.execute(query_2)
+        max_jogador_2 = current_cursor.fetchone()[0]
         ultima_jogada = max(max_jogador_1, max_jogador_2)
-        print(cursor.rowcount, "Ultima jogada obtida")
-        cursor.close()
+        print(current_cursor.rowcount, "Ultima jogada obtida")
         return ultima_jogada
     except Exception as e:
         print("Não obteve a ultima jogada", e)
         return -1
-
-cria_tabela_quadrado(con)

@@ -1,7 +1,7 @@
 import time
 
 from essencial import cli, jogador
-from essencial.banco.conector import con
+from essencial.banco.conector import inicializa_banco, conexao
 from essencial.banco.bd_partida import finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida
 from essencial.banco.bd_jogador import drop_tabela_jogador
 from essencial.banco.bd_quadrado import drop_tabela_quadrado
@@ -33,7 +33,9 @@ id_jogadores = [None, None]
 
 navios = {0: "porta_aviao", 1: "navio_tanque",
           2: "contratorpedeiro", 3: "submarino"}
-          
+
+cursor = inicializa_banco(conexao)
+
 def inicia_partida():
     try:
         console = cli.inicia_cli()
@@ -50,17 +52,16 @@ def inicia_partida():
                             len(nome_jogador_2), " -> Inserido", console)
 
         cli.limpa_cli(console)
-
-        jogador.registra_jogador(nome_jogador_1)
-        jogador.registra_jogador(nome_jogador_2)
+        jogador.registra_jogador(nome_jogador_1, cursor)
+        jogador.registra_jogador(nome_jogador_2, cursor)
 
         jogadores = jogador._lista_jogadores()
 
         id_jogadores[0] = jogadores[0]["id"]
         id_jogadores[1] = jogadores[1]["id"]
 
-        cria_partida_banco(jogadores[0]["id_banco"], jogadores[1]["id_banco"], con)
-        id_partida = le_ultimo_id_partida(con)
+        cria_partida_banco(jogadores[0]["id_banco"], jogadores[1]["id_banco"], cursor)
+        id_partida = le_ultimo_id_partida(cursor)
 
         for id_jogador in id_jogadores:
             while True:
@@ -162,7 +163,7 @@ def inicia_partida():
                                 jogador.consulta_jogador(1))
                 cli.escreve_na_tela(
                     13, 0, f"{atacante['nome']} venceu o jogo! Parabéns!", console)
-                finaliza_partida(id_partida, con)
+                finaliza_partida(id_partida, cursor)
                 cli.pede_dado(14, 0, 0, console).decode()
                 break
             if retorno == 3:
@@ -171,9 +172,10 @@ def inicia_partida():
             id_jogadores.append(indice_0)
         cli.encerra_cli()
     except Exception as e:
+        raise e
         print("Não chegou no final da execução da partida", e)
     finally:
-        drop_tabela_partida(con)
-        drop_tabela_quadrado(con)
-        drop_tabela_jogador(con)
+        # drop_tabela_partida(cursor)
+        # drop_tabela_quadrado(cursor)
+        # drop_tabela_jogador(cursor)
         pass

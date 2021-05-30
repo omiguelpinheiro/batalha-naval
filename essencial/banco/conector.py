@@ -1,57 +1,64 @@
 import mysql.connector
 from mysql.connector import connect
+from essencial.banco.bd_jogador import cria_tabela_jogador
+from essencial.banco.bd_partida import cria_tabela_partida
+from essencial.banco.bd_quadrado import cria_tabela_quadrado
 
 
 def conecta_servidor(host="localhost", user="root", password="root"):
     try:
         conexao = mysql.connector.connect(
-            host=host, user=user, password=password)
+            host=host, user=user, password=password, autocommit=True)
         print("Conexão aberta")
         return conexao
     except Exception as e:
         print("Conexão não foi aberta", e)
 
 
-def abre_cursor(con):
+def abre_cursor(con, log=False):
     try:
         if con is None or not con.is_connected():
             con = conecta_servidor()
         cursor = con.cursor(buffered=True)
-
-        print("Cursor aberto.")
+        if log:
+            print("Cursor aberto.")
+        return cursor
     except Exception as e:
-        print("Cursor não foi aberto", e)
-    return cursor
+        if log:
+            print("Cursor não foi aberto", e)
 
 
-def cria_banco(con, nome="Modular"):
+def cria_banco(current_cursor, nome="Modular"):
     try:
-        cursor = abre_cursor(con)
         query = f"CREATE DATABASE {nome}"
-        cursor.execute(query)
-        con.commit()
+        current_cursor.execute(query)
         print("Banco {nome} foi criado")
-        cursor.close()
         return 1
     except Exception as e:
         print("Banco não foi criado", e)
         return 0
 
 
-def usa_banco(con, nome="Modular"):
+def usa_banco(current_cursor, nome="Modular"):
     try:
-        cursor = abre_cursor(con)
         query = f"USE {nome}"
-        cursor.execute(query)
-        con.commit()
+        current_cursor.execute(query)
         print(f"Usando banco {nome}")
-        cursor.close()
         return 1
     except Exception as e:
         print("Banco não foi usado", e)
         return 0
 
+def inicializa_banco(conexao):
+    cursor = abre_cursor(conexao)  
 
-con = conecta_servidor()
-cria_banco(con)
-usa_banco(con)
+    cria_banco(cursor)
+    usa_banco(cursor)
+
+    cria_tabela_jogador(cursor)
+    cria_tabela_partida(cursor)
+    cria_tabela_quadrado(cursor)
+
+    return cursor
+
+conexao = conecta_servidor()

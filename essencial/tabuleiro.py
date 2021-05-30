@@ -5,7 +5,7 @@ from essencial.banco.bd_quadrado import *
 __all__ = ["gera_tabuleiro"]  # O que será importado com "import tabuleiro"
 
 
-def gera_tabuleiro(id_jogador_banco) -> int:
+def gera_tabuleiro(id_jogador_banco, cursor) -> int:
     """Função que gera um tabuleiro.
 
     Returns:
@@ -18,5 +18,4 @@ def gera_tabuleiro(id_jogador_banco) -> int:
         for x, coluna in enumerate(linha):
             tabuleiro[y][x] = quadrado.gera_quadrado()
             cria_quadrado_banco(id_jogador_banco, x, y, 0, "N", -1, cursor)
-    con.commit()
     return tabuleiro
