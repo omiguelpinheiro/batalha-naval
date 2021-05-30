@@ -78,7 +78,7 @@ def deleta_row_quadrado(coluna_condicao, condicao, con):
 def drop_tabela_quadrado(con):
     try:
         cursor = abre_cursor(con)
-        query = f"DROP Quadrado"
+        query = f"DROP TABLE Quadrado"
         cursor.execute(query)
         con.commit()
         print(cursor.rowcount, "Tabela Quadrado removida")

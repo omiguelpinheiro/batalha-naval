@@ -95,7 +95,7 @@ def deleta_row_partida(coluna_condicao, condicao, con):
 def drop_tabela_partida(con):
     try:
         cursor = abre_cursor(con)
-        query = f"DROP Partida"
+        query = f"DROP TABLE Partida"
         cursor.execute(query)
         con.commit()
         print(cursor.rowcount, "Tabela Partida removida")

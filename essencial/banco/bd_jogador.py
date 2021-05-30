@@ -93,7 +93,7 @@ def deleta_row_jogador(coluna_condicao, condicao, con):
 def drop_tabela_jogador(con):
     try:
         cursor = abre_cursor(con)
-        query = f"DROP Jogador"
+        query = f"DROP TABLE Jogador"
         cursor.execute(query)
         con.commit()
         print(cursor.rowcount, "Tabela Jogador removida")
