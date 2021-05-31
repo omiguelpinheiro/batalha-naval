@@ -11,7 +11,8 @@ def cria_tabela_jogador(current_cursor, log=False):
             tipo_3 INT NOT NULL, \
             tipo_4 INT NOT NULL \
             )")
-        print("Tabela Jogador criada")
+        if log:
+            print("Tabela Jogador criada")
         return 1
     except Exception as e:
         print("Tabela Jogador não foi criada", e)
@@ -20,26 +21,27 @@ def cria_tabela_jogador(current_cursor, log=False):
 # insere valores na tabela jogador
 
 
-def cria_jogador_banco(nome, tipo_1, tipo_2, tipo_3, tipo_4, current_cursor):
+def cria_jogador_banco(nome, tipo_1, tipo_2, tipo_3, tipo_4, current_cursor, log=False):
     try:
         query = f"INSERT INTO Jogador(nome, tipo_1, tipo_2, tipo_3, tipo_4) VALUES ('{nome}', {tipo_1}, {tipo_2}, {tipo_3}, {tipo_4})"
         current_cursor.execute(query)
-        print(current_cursor.rowcount, "Jogador inserido")
+        if log:
+            print(current_cursor.rowcount, "Jogador inserido")
         return 1
     except Exception as e:
         print("Não inseriu o jogador", e)
-        raise e
         return 0
 
 # le o ultimo id jogador inserido
 
 
-def le_ultimo_id_jogador(current_cursor):
+def le_ultimo_id_jogador(current_cursor, log=False):
     try:
         query = "SELECT @@IDENTITY"
         current_cursor.execute(query)
         last_id = current_cursor.fetchone()
-        print(current_cursor.rowcount, "Id jogador retornado")
+        if log:
+            print(current_cursor.rowcount, "Id jogador retornado")
         return last_id[0]
     except Exception as e:
         print("Id jogador não retornado", e)
@@ -48,11 +50,12 @@ def le_ultimo_id_jogador(current_cursor):
 # atualiza algum row na tabela jogador
 
 
-def atualiza_jogador(coluna, novo_valor, coluna_condicao, condicao, current_cursor):
+def atualiza_jogador(coluna, novo_valor, coluna_condicao, condicao, current_cursor, log=False):
     try:
         query = f"UPDATE Jogador SET {coluna}={novo_valor} WHERE {coluna_condicao}={condicao}"
         current_cursor.execute(query)
-        print(current_cursor.rowcount, "Tabela jogador atualizada")
+        if log:
+            print(current_cursor.rowcount, "Tabela jogador atualizada")
         return 1
     except Exception as e:
         print("Não atualizou a tabela Jogador", e)
@@ -61,11 +64,12 @@ def atualiza_jogador(coluna, novo_valor, coluna_condicao, condicao, current_curs
 # deleta algum row na tabela jogador
 
 
-def deleta_row_jogador(coluna_condicao, condicao, current_cursor):
+def deleta_row_jogador(coluna_condicao, condicao, current_cursor, log=False):
     try:
         query = f"DELETE FROM Jogador WHERE {coluna_condicao}={condicao}"
         current_cursor.execute(query)
-        print(current_cursor.rowcount, "Rows em Jogador removidos")
+        if log:
+            print(current_cursor.rowcount, "Rows em Jogador removidos")
         return 1
     except Exception as e:
         print("Rows em Jogador não foram removidos", e)
@@ -74,11 +78,12 @@ def deleta_row_jogador(coluna_condicao, condicao, current_cursor):
 # remove a tabela jogador
 
 
-def drop_tabela_jogador(current_cursor):
+def drop_tabela_jogador(current_cursor, log=False):
     try:
         query = f"DROP TABLE Jogador"
         current_cursor.execute(query)
-        print(current_cursor.rowcount, "Tabela Jogador removida")
+        if log:
+            print(current_cursor.rowcount, "Tabela Jogador removida")
         return 1
     except Exception as e:
         print("Não removeu a Tabela Jogador", e)
