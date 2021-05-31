@@ -35,6 +35,7 @@ navios = {0: "porta_aviao", 1: "navio_tanque",
           2: "contratorpedeiro", 3: "submarino"}
 
 cursor = inicializa_banco(conexao)
+conexao.commit()
 
 def inicia_partida():
     try:
@@ -52,8 +53,9 @@ def inicia_partida():
                             len(nome_jogador_2), " -> Inserido", console)
 
         cli.limpa_cli(console)
-        jogador.registra_jogador(nome_jogador_1, cursor)
-        jogador.registra_jogador(nome_jogador_2, cursor)
+        jogador.registra_jogador(nome_jogador_1, cursor, conexao)
+        jogador.registra_jogador(nome_jogador_2, cursor, conexao)
+        conexao.commit()
 
         jogadores = jogador._lista_jogadores()
 
@@ -61,6 +63,8 @@ def inicia_partida():
         id_jogadores[1] = jogadores[1]["id"]
 
         cria_partida_banco(jogadores[0]["id_banco"], jogadores[1]["id_banco"], cursor)
+        conexao.commit()
+
         id_partida = le_ultimo_id_partida(cursor)
 
         for id_jogador in id_jogadores:
@@ -113,7 +117,7 @@ def inicia_partida():
                     7, 28, " " * (len(mensagem_exemplo_entrada) + 3), console)
 
                 retorno = jogador.posiciona_navio(
-                    int(navio), primeiro_quadrado, orientacao, id_jogador)
+                    int(navio), primeiro_quadrado, orientacao, id_jogador, cursor)
                 if retorno == -1:
                     cli.escreve_na_tela(8, 28, mensagem_erro_quadrado, console)
                 elif retorno == -2:
@@ -133,13 +137,6 @@ def inicia_partida():
                 if len(conjunto_navios) == 1 and 0 in conjunto_navios:
                     break
 
-        jogador.registra_jogador("Miguel")
-        jogador.registra_jogador("Leonardo")
-
-        jogador.posiciona_navio(0, "a8", "H", 0)
-
-        jogador.posiciona_navio(0, "a8", "H", 1)
-
         while True:
             atacante = jogador.consulta_jogador(id_jogadores[0])
             atacado = jogador.consulta_jogador(id_jogadores[1])
@@ -151,7 +148,8 @@ def inicia_partida():
             coordenada = cli.pede_dado(
                 13, len(mensagem_pede_ataque), 3, console).decode()
             retorno = jogador.ataca_jogador(
-                id_jogadores[0], id_jogadores[1], coordenada)
+                id_jogadores[0], id_jogadores[1], coordenada, cursor)
+            conexao.commit()
             cli.escreve_na_tela(17, 0, mensagem_erro_quadrado, console)
             if retorno == -1:
                 cli.escreve_na_tela(14, 0, mensagem_erro_quadrado, console)
@@ -164,6 +162,7 @@ def inicia_partida():
                 cli.escreve_na_tela(
                     13, 0, f"{atacante['nome']} venceu o jogo! Parabéns!", console)
                 finaliza_partida(id_partida, cursor)
+                conexao.commit()
                 cli.pede_dado(14, 0, 0, console).decode()
                 break
             if retorno == 3:

@@ -1,7 +1,7 @@
 # cria a tabela jogador em um banco de dados
 
 
-def cria_tabela_jogador(current_cursor):
+def cria_tabela_jogador(current_cursor, log=False):
     try:
         current_cursor.execute("CREATE TABLE Jogador ( \
             id_jogador INT AUTO_INCREMENT PRIMARY KEY, \

@@ -9,7 +9,7 @@ _jogadores: list = []  # Lista de jogadores registrados até o momento.
 _tamanho_navios: dict = {0: 5, 1: 4, 2: 3, 3: 2}  # Dicionário de pares chave-valor (tipo_navio, tamanho)
 
 
-def registra_jogador(nome: str, cursor) -> int:
+def registra_jogador(nome: str, cursor, con) -> int:
     """Registra um novo jogador na partida.
 
     Jogador é um dicionário com as seguintes chaves:

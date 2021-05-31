@@ -13,7 +13,6 @@ def gera_tabuleiro(id_jogador_banco, cursor) -> int:
 
     """
     tabuleiro = [[{} for coluna in range(quadrado.consulta_numero_colunas())] for linha in range(quadrado.consulta_numero_linhas())]
-    cursor = abre_cursor(con)
     for y, linha in enumerate(tabuleiro):
         for x, coluna in enumerate(linha):
             tabuleiro[y][x] = quadrado.gera_quadrado()
