@@ -40,7 +40,7 @@ def cria_partida_banco(id_jogador1, id_jogador2, current_cursor, log=False):
 
 def le_ultimo_id_partida(current_cursor, log=False):
     try:
-        query =  "SELECT @@IDENTITY"
+        query =  "SELECT id_partida FROM Partida ORDER BY id_partida DESC LIMIT 1"
         current_cursor.execute(query)
         last_id = current_cursor.fetchone()
         if log:
@@ -87,9 +87,20 @@ def deleta_row_partida(coluna_condicao, condicao, current_cursor, log=False):
         print("Rows em Partida não foram removidos", e)
         return 0
 
+def retorna_partidas(current_cursor, log=False):
+    try:
+        query = f"SELECT * FROM Partida"
+        current_cursor.execute(query)
+        columns = [column[0] for column in current_cursor.description]
+        rows = [dict(zip(columns, row)) for row in current_cursor.fetchall()]
+        if log:
+            print(current_cursor.rowcount, "Partidas retornadas")
+        return rows
+    except Exception as e:
+        print("Não retornou as partidas", e)
+        return 0
+    
 # remove a tabela partida do banco
-
-
 def drop_tabela_partida(current_cursor, log=False):
     try:
         query = f"DROP TABLE Partida"

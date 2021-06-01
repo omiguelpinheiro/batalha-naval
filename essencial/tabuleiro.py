@@ -12,9 +12,13 @@ def gera_tabuleiro(id_jogador_banco, cursor) -> int:
         Retorna o tabuleiro criado.
 
     """
-    tabuleiro = [[{} for coluna in range(quadrado.consulta_numero_colunas())] for linha in range(quadrado.consulta_numero_linhas())]
+    tabuleiro = gera_tabuleiro_vazio()
     for y, linha in enumerate(tabuleiro):
         for x, coluna in enumerate(linha):
             tabuleiro[y][x] = quadrado.gera_quadrado()
             cria_quadrado_banco(id_jogador_banco, x, y, 0, "N", -1, cursor)
+    return tabuleiro
+
+def gera_tabuleiro_vazio():
+    tabuleiro = [[{} for coluna in range(quadrado.consulta_numero_colunas())] for linha in range(quadrado.consulta_numero_linhas())]
     return tabuleiro

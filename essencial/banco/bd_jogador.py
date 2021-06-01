@@ -51,7 +51,7 @@ def cria_jogador_banco(nome, navios_tipo_1, navios_tipo_2, navios_tipo_3, navios
 
 def le_ultimo_id_jogador(current_cursor, log=False):
     try:
-        query = "SELECT @@IDENTITY"
+        query = "SELECT id_jogador FROM Jogador ORDER BY id_jogador DESC LIMIT 1"
         current_cursor.execute(query)
         last_id = current_cursor.fetchone()
         if log:
@@ -62,6 +62,16 @@ def le_ultimo_id_jogador(current_cursor, log=False):
         return 0
 
 # atualiza algum row na tabela jogador
+def atualiza_placar_jogador(id_jogador, placar, current_cursor, log=False):
+    try:
+        query = f"UPDATE Jogador SET placar={placar} WHERE id_jogador={id_jogador}"
+        current_cursor.execute(query)
+        if log:
+            print(current_cursor.rowcount, f"Placar do jogador {id_jogador} atualizado")
+        return 1
+    except Exception as e:
+        print("Placar do jogador não foi atualizado", e)
+        return 0
 
 
 def atualiza_placar_jogador(id_jogador, placar, current_cursor, log=False):
@@ -83,13 +93,34 @@ def atualiza_quantidade_navios_jogador(id_jogador, id_navio, quantidade, current
             print(current_cursor.rowcount, f"Navios do jogador {id_jogador} atualizado")
         return 1
     except Exception as e:
-        raise e
         print("Navios do jogador não foi atualizado", e)
         return 0
 
+def retorna_jogador(id_jogador, current_cursor, log=False):
+    try:
+        query = f"SELECT * FROM Jogador WHERE id_jogador={id_jogador}"
+        current_cursor.execute(query)
+        if log:
+            print(current_cursor.rowcount, f"Jogador {id_jogador} selecionado")
+        return current_cursor.fetchone()
+    except Exception as e:
+        print("Jogador não foi selecionado", e)
+        return 0
+
+def retorna_jogadores(current_cursor, log=False):
+    try:
+        query = f"SELECT * FROM Jogador"
+        current_cursor.execute(query)
+        columns = [column[0] for column in current_cursor.description]
+        rows = [dict(zip(columns, row)) for row in current_cursor.fetchall()]
+        if log:
+            print(current_cursor.rowcount, "Jogadores retornados")
+        return rows
+    except Exception as e:
+        print("Não retornou os jogadores", e)
+        return 0
+
 # deleta algum row na tabela jogador
-
-
 def deleta_row_jogador(coluna_condicao, condicao, current_cursor, log=False):
     try:
         query = f"DELETE FROM Jogador WHERE {coluna_condicao}={condicao}"
@@ -102,8 +133,6 @@ def deleta_row_jogador(coluna_condicao, condicao, current_cursor, log=False):
         return 0
 
 # remove a tabela jogador
-
-
 def drop_tabela_jogador(current_cursor, log=False):
     try:
         query = f"DROP TABLE Jogador"

@@ -48,9 +48,20 @@ def atualiza_quadrado(id_dono, linha, coluna, n_jogada, novo_estado, novo_id_nav
         print("Não atualizou o quadrado", e)
         return 0
 
+def retorna_quadrados(current_cursor, log=False):
+    try:
+        query = f"SELECT * FROM Quadrado"
+        current_cursor.execute(query)
+        columns = [column[0] for column in current_cursor.description]
+        rows = [dict(zip(columns, row)) for row in current_cursor.fetchall()]
+        if log:
+            print(current_cursor.rowcount, "Quadrados retornados")
+        return rows
+    except Exception as e:
+        print("Não retornou os quadrados", e)
+        return 0
+
 # remove algum row na tabela quadrado
-
-
 def deleta_row_quadrado(coluna_condicao, condicao, current_cursor, log=False):
     try:
         query = f"DELETE FROM Quadrado WHERE {coluna_condicao}={condicao}"
