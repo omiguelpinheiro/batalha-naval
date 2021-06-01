@@ -9,14 +9,15 @@ def cria_tabela_partida(current_cursor, log=False):
             id_jogador2 INT NOT NULL, \
             n_ultima_jogada INT NOT NULL, \
             finalizada BOOLEAN NOT NULL, \
+            vencedor INT NOT NULL, \
             CONSTRAINT FK_Jogador1Partida FOREIGN KEY (id_jogador1) REFERENCES Jogador(id_jogador), \
             CONSTRAINT FK_Jogador2Partida FOREIGN KEY (id_jogador2) REFERENCES Jogador(id_jogador) \
             )")
         if log:
-            print("Tabela Jogador criada")
+            print("Tabela partida criada")
         return 1
     except Exception as e:
-        print("Tabela Jogador não foi criada", e)
+        print("Tabela Partida não foi criada", e)
         return 0
 
 # insere valores na tabela partida
@@ -24,12 +25,13 @@ def cria_tabela_partida(current_cursor, log=False):
 
 def cria_partida_banco(id_jogador1, id_jogador2, current_cursor, log=False):
     try:
-        query = f"INSERT INTO Partida(id_jogador1, id_jogador2, n_ultima_jogada, finalizada) VALUES ({id_jogador1}, {id_jogador2}, 0, false)"
+        query = f"INSERT INTO Partida(id_jogador1, id_jogador2, n_ultima_jogada, finalizada, vencedor) VALUES ({id_jogador1}, {id_jogador2}, 0, false, -1)"
         current_cursor.execute(query)
         if log:
             print(current_cursor.rowcount, "Partida inserida")
         return 1
     except Exception as e:
+        raise e
         print("Não inseriu a partida", e)
         return 0
 
@@ -51,9 +53,9 @@ def le_ultimo_id_partida(current_cursor, log=False):
 # atualiza algum row da tabela partida
 
 
-def finaliza_partida(id_partida, current_cursor, log=False):
+def finaliza_partida(id_partida, id_vencedor, current_cursor, log=False):
     try:
-        query = f"UPDATE Partida SET finalizada=TRUE WHERE id_partida={id_partida}"
+        query = f"UPDATE Partida SET finalizada=TRUE, vencedor={id_vencedor} WHERE id_partida={id_partida}"
         current_cursor.execute(query)
         if log:
             print(current_cursor.rowcount, "Partida atualizada")
@@ -62,8 +64,17 @@ def finaliza_partida(id_partida, current_cursor, log=False):
         print("Não atualizou a partida", e)
         return 0
 
-# remove algum row da tabela partida
-
+def atualiza_ultima_rodada(id_partida, ultima_rodada, current_cursor, log=False):
+    try:
+        query = f"UPDATE Partida SET n_ultima_jogada={ultima_rodada} WHERE id_partida={id_partida}"
+        current_cursor.execute(query)
+        if log:
+            print(current_cursor.rowcount, "Última rodada da partida atualizada")
+        return 1
+    except Exception as e:
+        raise e
+        print("Não atualizou a última rodada da partida", e)
+        return 0
 
 def deleta_row_partida(coluna_condicao, condicao, current_cursor, log=False):
     try:

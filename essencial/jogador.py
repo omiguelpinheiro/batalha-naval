@@ -55,12 +55,19 @@ def registra_jogador(nome: str, cursor, con) -> int:
     else:
         return 0
 
-    # depois dos jogadores criados, vamos colocar no bd
-    tipo1 = jogador["navios_disponiveis"][0]
-    tipo2 = jogador["navios_disponiveis"][1]
-    tipo3 = jogador["navios_disponiveis"][2]
-    tipo4 = jogador["navios_disponiveis"][3]
-    cria_jogador_banco(jogador["nome"], tipo1, tipo2, tipo3, tipo4, cursor)
+    tamanho_tipo_1 = _tamanho_navios[0]
+    tamanho_tipo_2 = _tamanho_navios[1]
+    tamanho_tipo_3 = _tamanho_navios[2]
+    tamanho_tipo_4 = _tamanho_navios[3]
+
+
+    navios_tipo_1 = jogador["navios_disponiveis"][0]
+    navios_tipo_2 = jogador["navios_disponiveis"][1]
+    navios_tipo_3 = jogador["navios_disponiveis"][2]
+    navios_tipo_4 = jogador["navios_disponiveis"][3]
+
+    cria_jogador_banco(jogador["nome"], navios_tipo_1, navios_tipo_2, navios_tipo_3, navios_tipo_4, tamanho_tipo_1, tamanho_tipo_2, tamanho_tipo_3, tamanho_tipo_4, 0, maximo_pontos, cursor)
+    con.commit()
     ultimo_id = le_ultimo_id_jogador(cursor)
     jogador["id_banco"] = ultimo_id
 
@@ -166,6 +173,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
 
     _jogadores[id_jogador]["navios"].append(navio)
     _jogadores[id_jogador]["navios_disponiveis"][id_navio] -= 1
+    atualiza_quantidade_navios_jogador(_jogadores[id_jogador]["id_banco"], id_navio, _jogadores[id_jogador]["navios_disponiveis"][id_navio], cursor)
 
     if orientacao == "V":
         for parte in range(tamanho_navio):
@@ -219,6 +227,7 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str, cursor):
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado_visivel"] = "D"
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado"] = "D"
         _jogadores[id_atacante]["placar"] += 1
+        atualiza_placar_jogador(_jogadores[id_atacante]["id_banco"], _jogadores[id_atacante]["placar"], cursor)
         for i, navio in enumerate(_jogadores[id_atacado]["navios"]):
             if [numero_linha, numero_coluna] in navio["ocupando"]:
                 _jogadores[id_atacado]["navios"][i]["ocupando"].remove([numero_linha, numero_coluna])

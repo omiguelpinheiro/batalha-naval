@@ -2,9 +2,9 @@ import time
 
 from essencial import cli, jogador
 from essencial.banco.conector import inicializa_banco, conexao
-from essencial.banco.bd_partida import finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida
+from essencial.banco.bd_partida import atualiza_ultima_rodada, finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida
 from essencial.banco.bd_jogador import drop_tabela_jogador
-from essencial.banco.bd_quadrado import drop_tabela_quadrado
+from essencial.banco.bd_quadrado import drop_tabela_quadrado, retorna_ultima_jogada
 
 from xml.dom import minidom
 
@@ -118,6 +118,7 @@ def inicia_partida():
 
                 retorno = jogador.posiciona_navio(
                     int(navio), primeiro_quadrado, orientacao, id_jogador, cursor)
+                conexao.commit()
                 if retorno == -1:
                     cli.escreve_na_tela(8, 28, mensagem_erro_quadrado, console)
                 elif retorno == -2:
@@ -149,6 +150,7 @@ def inicia_partida():
                 13, len(mensagem_pede_ataque), 3, console).decode()
             retorno = jogador.ataca_jogador(
                 id_jogadores[0], id_jogadores[1], coordenada, cursor)
+            atualiza_ultima_rodada(id_partida, retorna_ultima_jogada(atacante["id_banco"], atacado["id_banco"], cursor), cursor)
             conexao.commit()
             cli.escreve_na_tela(17, 0, mensagem_erro_quadrado, console)
             if retorno == -1:
@@ -161,7 +163,7 @@ def inicia_partida():
                                 jogador.consulta_jogador(1))
                 cli.escreve_na_tela(
                     13, 0, f"{atacante['nome']} venceu o jogo! Parabéns!", console)
-                finaliza_partida(id_partida, cursor)
+                finaliza_partida(id_partida, atacante["id_banco"], cursor)
                 conexao.commit()
                 cli.pede_dado(14, 0, 0, console).decode()
                 break

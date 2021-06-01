@@ -30,6 +30,7 @@ def cria_quadrado_banco(id_dono, linha, coluna, n_jogada, estado, id_navio, curr
             print(current_cursor.rowcount, "Quadrado inserido")
         return 1
     except Exception as e:
+        raise e
         print("Não inseriu o quadrado", e)
         return 0
 

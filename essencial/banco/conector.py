@@ -1,4 +1,5 @@
 import mysql.connector
+
 from mysql.connector import connect
 from essencial.banco.bd_jogador import cria_tabela_jogador
 from essencial.banco.bd_partida import cria_tabela_partida
@@ -61,7 +62,6 @@ def inicializa_banco(conexao, log=False):
     cria_tabela_jogador(cursor, log)
     cria_tabela_partida(cursor, log)
     cria_tabela_quadrado(cursor, log)
-
 
     return cursor
 
