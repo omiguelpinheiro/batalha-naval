@@ -1,10 +1,11 @@
+from essencial.banco.gerador_xml import gera_xml, retorna_banco_como_dicionario
 import time
 
 from essencial import cli, jogador
 from essencial.banco.conector import inicializa_banco, conexao
-from essencial.banco.bd_partida import atualiza_ultima_rodada, finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida
-from essencial.banco.bd_jogador import drop_tabela_jogador
-from essencial.banco.bd_quadrado import drop_tabela_quadrado, retorna_ultima_jogada
+from essencial.banco.bd_partida import atualiza_ultima_rodada, finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida, retorna_partidas
+from essencial.banco.bd_jogador import drop_tabela_jogador, retorna_jogadores
+from essencial.banco.bd_quadrado import drop_tabela_quadrado, retorna_ultima_jogada, retorna_quadrados
 
 from xml.dom import minidom
 
@@ -173,10 +174,16 @@ def inicia_partida():
             id_jogadores.append(indice_0)
         cli.encerra_cli()
     except Exception as e:
-        raise e
         print("Não chegou no final da execução da partida", e)
     finally:
-        # drop_tabela_partida(cursor)
-        # drop_tabela_quadrado(cursor)
-        # drop_tabela_jogador(cursor)
+        p = retorna_partidas(cursor)
+        q = retorna_quadrados(cursor)
+        j = retorna_jogadores(cursor)
+
+        dados = retorna_banco_como_dicionario(p, j, q)
+        gera_xml(dados)
+
+        drop_tabela_partida(cursor)
+        drop_tabela_quadrado(cursor)
+        drop_tabela_jogador(cursor)
         pass

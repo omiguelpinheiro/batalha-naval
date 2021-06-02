@@ -1,7 +1,19 @@
-# cria a tabela partida no banco
+from mysql.connector.cursor import CursorBase
+from typing import Tuple, Union
 
 
-def cria_tabela_partida(current_cursor, log=False):
+def cria_tabela_partida(current_cursor: CursorBase, log: bool = False) -> int:
+    """Cria tabela Partida onde os dados da partida ficarão.
+
+    Args:
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: 1 se a tabela for criada com sucesso.
+             0 se a tabela não for criada.
+             
+    """
     try:
         current_cursor.execute("CREATE TABLE Partida ( \
             id_partida INT NOT NULL AUTO_INCREMENT PRIMARY KEY, \
@@ -17,13 +29,25 @@ def cria_tabela_partida(current_cursor, log=False):
             print("Tabela partida criada")
         return 1
     except Exception as e:
-        print("Tabela Partida não foi criada", e)
+        if log:
+            print("Tabela Partida não foi criada", e)
         return 0
 
-# insere valores na tabela partida
 
+def cria_partida_banco(id_jogador1: int, id_jogador2: int, current_cursor: CursorBase, log: bool = False) -> int:
+    """[summary]
 
-def cria_partida_banco(id_jogador1, id_jogador2, current_cursor, log=False):
+    Args:
+        id_jogador1 (int): Id do jogador 1 da partida.
+        id_jogador2 (int): Id do jogador 2 da partida.
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: 1 se a partida for criada com sucesso.
+             0 se a partida não for criada.
+
+    """
     try:
         query = f"INSERT INTO Partida(id_jogador1, id_jogador2, n_ultima_jogada, finalizada, vencedor) VALUES ({id_jogador1}, {id_jogador2}, 0, false, -1)"
         current_cursor.execute(query)
@@ -31,14 +55,23 @@ def cria_partida_banco(id_jogador1, id_jogador2, current_cursor, log=False):
             print(current_cursor.rowcount, "Partida inserida")
         return 1
     except Exception as e:
-        raise e
-        print("Não inseriu a partida", e)
+        if log:
+            print("Não inseriu a partida", e)
         return 0
 
-# le o ultimo id de partida inserido na tabela
 
+def le_ultimo_id_partida(current_cursor: CursorBase, log: bool = False) -> int:
+    """Retorna o último id da tabela Partida do banco.
 
-def le_ultimo_id_partida(current_cursor, log=False):
+    Args:
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: O id da última partida inserida no banco ou -1 caso alguma coisa
+            tenha dado errado.
+
+    """
     try:
         query =  "SELECT id_partida FROM Partida ORDER BY id_partida DESC LIMIT 1"
         current_cursor.execute(query)
@@ -47,13 +80,25 @@ def le_ultimo_id_partida(current_cursor, log=False):
             print(current_cursor.rowcount, "Id partida retornado")
         return last_id[0]
     except Exception as e:
-        print("Id partida não retornado", e)
-        return 0
+        if log:
+            print("Id partida não retornado", e)
+        return -1
 
-# atualiza algum row da tabela partida
 
+def finaliza_partida(id_partida: int, id_vencedor: int, current_cursor: int, log: bool = False) -> int:
+    """Atribui um vencedor à coluna vencedor a uma linha de Jogador.
 
-def finaliza_partida(id_partida, id_vencedor, current_cursor, log=False):
+    Args:
+        id_partida (int): Id da partida que estamos atualizando.
+        id_vencedor (int): Id do jogador vencedor.
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: 1 se a partida foi atualizada com sucesso.
+             0 se a partida não foi atualizada.
+
+    """
     try:
         query = f"UPDATE Partida SET finalizada=TRUE, vencedor={id_vencedor} WHERE id_partida={id_partida}"
         current_cursor.execute(query)
@@ -61,10 +106,25 @@ def finaliza_partida(id_partida, id_vencedor, current_cursor, log=False):
             print(current_cursor.rowcount, "Partida atualizada")
         return 1
     except Exception as e:
-        print("Não atualizou a partida", e)
+        if log:
+            print("Não atualizou a partida", e)
         return 0
 
-def atualiza_ultima_rodada(id_partida, ultima_rodada, current_cursor, log=False):
+
+def atualiza_ultima_rodada(id_partida: int, ultima_rodada: int, current_cursor: CursorBase, log: bool = False) -> int:
+    """Atualizad uma partida no banco de dados.
+
+    Args:
+        id_partida (int): Id da partida que estamos atualizando.
+        ultima_rodada (int): Novo valor par a última rodada.
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: 1 se a partida foi atualizada com sucesso.
+             0 se a partida não foi atualizada.
+
+    """
     try:
         query = f"UPDATE Partida SET n_ultima_jogada={ultima_rodada} WHERE id_partida={id_partida}"
         current_cursor.execute(query)
@@ -72,22 +132,23 @@ def atualiza_ultima_rodada(id_partida, ultima_rodada, current_cursor, log=False)
             print(current_cursor.rowcount, "Última rodada da partida atualizada")
         return 1
     except Exception as e:
-        raise e
-        print("Não atualizou a última rodada da partida", e)
-        return 0
-
-def deleta_row_partida(coluna_condicao, condicao, current_cursor, log=False):
-    try:
-        query = f"DELETE FROM Partida WHERE {coluna_condicao}={condicao}"
-        current_cursor.execute(query)
         if log:
-            print(current_cursor.rowcount, "Rows em Partida removidos")
-        return 1
-    except Exception as e:
-        print("Rows em Partida não foram removidos", e)
+            print("Não atualizou a última rodada da partida", e)
         return 0
 
-def retorna_partidas(current_cursor, log=False):
+
+def retorna_partidas(current_cursor: CursorBase, log: bool = False) -> Union[Tuple, int]:
+    """Retorna todas as partidas que estão no banco de dados.
+
+    Args:
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        Union[Tuple, int]: Todas as partidas que estão no banco de dados ou
+            0 caso tenha ocorrido algumm problema.
+
+    """
     try:
         query = f"SELECT * FROM Partida"
         current_cursor.execute(query)
@@ -97,11 +158,23 @@ def retorna_partidas(current_cursor, log=False):
             print(current_cursor.rowcount, "Partidas retornadas")
         return rows
     except Exception as e:
-        print("Não retornou as partidas", e)
+        if log:
+            print("Não retornou as partidas", e)
         return 0
     
-# remove a tabela partida do banco
-def drop_tabela_partida(current_cursor, log=False):
+
+def drop_tabela_partida(current_cursor: CursorBase, log: bool = False) -> int:
+    """Deleta a tabela Partida do banco de dados.
+
+    Args:
+        current_cursor (CursorBase): Cursor aberto que executará as queries.
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: 1 se a tabela foi deletada com sucesso.
+             0 se a tabela não foi deletada.
+             
+    """
     try:
         query = f"DROP TABLE Partida"
         current_cursor.execute(query)

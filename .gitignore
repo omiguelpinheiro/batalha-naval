@@ -4,4 +4,4 @@ main.py
 **/__pycache__
 .DS_Store
 .vscode
-essencial/saves
+essencial/saves/*
