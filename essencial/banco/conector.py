@@ -7,13 +7,14 @@ from mysql.connector.connection import MySQLConnection
 from mysql.connector.cursor import CursorBase
 
 
-def conecta_servidor(host: str = "localhost", user: str = "root", password: str = "root", log: bool = False) -> Union[MySQLConnection, int]:
+def conecta_servidor(host: str = "localhost", user: str = "root", password: str = "root", autocommit: bool = False, log: bool = False) -> Union[MySQLConnection, int]:
     """Cria uma conexão com o servidor.
 
     Args:
         host (str, optional): Host do servidor. Default é "localhost".
         user (str, optional): Usuário do servidor. Default é "root".
         password (str, optional): Senha do servidor. Default é "root".
+        autocommit (bool, optional): Se o cursor fará commit sozinho. Default é false.
         log (bool, optional): Ativa e desativa o logging. Default é False.
 
     Returns:
@@ -22,15 +23,14 @@ def conecta_servidor(host: str = "localhost", user: str = "root", password: str 
 
     """
     try:
-        conexao = connect(
-            host=host, user=user, password=password)
+        conexao = connect(host=host, user=user, password=password, autocommit=autocommit)
         if log:
             print("Conexão aberta")
         return conexao
     except Exception as e:
         if log:
             print("Conexão não foi aberta", e)
-        return -1
+        return 0
 
 
 def abre_cursor(con: MySQLConnection, log: bool = False) -> Union[CursorBase, int]:
@@ -46,8 +46,8 @@ def abre_cursor(con: MySQLConnection, log: bool = False) -> Union[CursorBase, in
 
     """
     try:
-        if con is None or not con.is_connected():
-            con = conecta_servidor()
+        # if con is None or not con.is_connected():
+        #     con = conecta_servidor()
         cursor = con.cursor(buffered=True)
         if log:
             print("Cursor aberto.")
@@ -55,7 +55,7 @@ def abre_cursor(con: MySQLConnection, log: bool = False) -> Union[CursorBase, in
     except Exception as e:
         if log:
             print("Cursor não foi aberto", e)
-        return -1
+        return 0
 
 
 def cria_banco(current_cursor: CursorBase, nome="Modular", log=False) -> int:
@@ -80,6 +80,31 @@ def cria_banco(current_cursor: CursorBase, nome="Modular", log=False) -> int:
     except Exception as e:
         if log:
             print("Banco não foi criado", e)
+        return 0
+
+
+def deleta_banco(current_cursor: CursorBase, nome="Modular", log=False) -> int:
+    """Deleta um banco.
+
+    Args:
+        current_cursor (CursorBase): Um cursor aberto e conectado a um banco de dados.
+        nome (str, optional): Nome do banco que será deletado. Default é "Modular".
+        log (bool, optional): Ativa e desativa o logging. Default é False.
+
+    Returns:
+        int: 1 se o banco foi deletado.
+             0 se o banco não foi deletado.
+
+    """
+    try:
+        query = f"DROP DATABASE {nome}"
+        current_cursor.execute(query)
+        if log:
+            print("Banco {nome} foi deletado")
+        return 1
+    except Exception as e:
+        if log:
+            print("Banco não foi deletado", e)
         return 0
 
 

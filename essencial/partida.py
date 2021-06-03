@@ -3,9 +3,9 @@ import time
 
 from essencial import cli, jogador
 from essencial.banco.conector import inicializa_banco, conexao
-from essencial.banco.bd_partida import atualiza_ultima_rodada, finaliza_partida, drop_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida, retorna_partidas
-from essencial.banco.bd_jogador import drop_tabela_jogador, retorna_jogadores
-from essencial.banco.bd_quadrado import drop_tabela_quadrado, retorna_ultima_jogada, retorna_quadrados
+from essencial.banco.bd_partida import atualiza_ultima_rodada, finaliza_partida, dropa_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida, retorna_partidas
+from essencial.banco.bd_jogador import dropa_tabela_jogador, retorna_jogadores
+from essencial.banco.bd_quadrado import dropa_tabela_quadrado, retorna_ultima_jogada, retorna_quadrados
 
 from xml.dom import minidom
 
@@ -169,7 +169,8 @@ def inicia_partida():
                 cli.pede_dado(14, 0, 0, console).decode()
                 break
             if retorno == 3:
-                raise Exception("VOCE DESTRUIU UM NAVIO")
+                # Lidar com a explosão de um navio
+                pass
             indice_0 = id_jogadores.pop(0)
             id_jogadores.append(indice_0)
         cli.encerra_cli()
@@ -183,7 +184,7 @@ def inicia_partida():
         dados = retorna_banco_como_dicionario(p, j, q)
         gera_xml(dados)
 
-        drop_tabela_partida(cursor)
-        drop_tabela_quadrado(cursor)
-        drop_tabela_jogador(cursor)
+        dropa_tabela_partida(cursor)
+        dropa_tabela_quadrado(cursor)
+        dropa_tabela_jogador(cursor)
         pass

@@ -206,7 +206,7 @@ def retorna_jogadores(current_cursor: CursorBase, log: bool = False) -> List[Tup
         return 0
 
 
-def drop_tabela_jogador(current_cursor: CursorBase, log: bool = False) -> int:
+def dropa_tabela_jogador(current_cursor: CursorBase, log: bool = False) -> int:
     """Deleta a tabela Jogador do banco de dados.
 
     Args:

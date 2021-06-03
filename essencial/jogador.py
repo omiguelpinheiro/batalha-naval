@@ -15,7 +15,7 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
 
     Jogador é um dicionário com as seguintes chaves:
         nome (str): O nome do jogador.
-        navios (str): Informações sobre os navios do jogador.
+        navios (list): Informações sobre os navios do jogador.
         placar (int): O placar do jogador.
         navios_disponíveis (dict): Pares chave valor dizendo quantos navios
             de cada tipo o jogador posicionará. Os pares são do
@@ -43,7 +43,7 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
     jogador["navios"] = list()
     jogador["nome"] = nome
     jogador["placar"] = 0
-    jogador["navios_disponiveis"] = {0: 0, 1: 0, 2: 0, 3: 1}
+    jogador["navios_disponiveis"] = {0: 0, 1: 0, 2: 0, 3: 2}
 
     maximo_pontos = 0
     if maximo_pontos == 0:
@@ -159,6 +159,8 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
         return -1
     if orientacao not in ["V", "H"]:
         return -2
+    if id_jogador not in [0, 1]:
+        return -3
     if consulta_jogador(id_jogador)["navios_disponiveis"][id_navio] <= 0:
         return -4
     if int(quadrado_inicio[1]) + 1 - tamanho_navio < 0 and orientacao == "H":
@@ -194,7 +196,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
             quadrado_original = _jogadores[id_jogador]["tabuleiro"][numero_linha - parte][numero_coluna]
             quadrado_novo = quadrado.altera_estado(quadrado_original, "H")
             _jogadores[id_jogador]["tabuleiro"][numero_linha - parte][numero_coluna] = quadrado_novo
-            retorno = atualiza_quadrado(_jogadores[id_jogador]["id_banco"], numero_linha - parte, numero_coluna, 0, "H", len(_jogadores[id_jogador]["navios"] - 1, cursor))
+            retorno = atualiza_quadrado(_jogadores[id_jogador]["id_banco"], numero_linha - parte, numero_coluna, 0, "H", len(_jogadores[id_jogador]["navios"]) - 1, cursor)
             if retorno == 0:
                 return -9
     elif orientacao == "H":

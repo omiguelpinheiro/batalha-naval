@@ -101,7 +101,7 @@ def retorna_quadrados(current_cursor: CursorBase, log: bool = False) -> Union[Tu
         log (bool, optional): Ativa e desativa o logging. Default é False.
 
     Returns:
-        Union[Tuple, int]: Todos os quadrados que estão no banco ou 0 caso
+        Union[List[Tuple], int]: Todos os quadrados que estão no banco ou 0 caso
             alguma coisa tenha dado errado.
 
     """
@@ -119,7 +119,7 @@ def retorna_quadrados(current_cursor: CursorBase, log: bool = False) -> Union[Tu
         return 0
 
 
-def drop_tabela_quadrado(current_cursor: CursorBase, log: bool = False) -> int:
+def dropa_tabela_quadrado(current_cursor: CursorBase, log: bool = False) -> int:
     """Deleta a tabela Quadrado do banco de dados.
 
     Args:

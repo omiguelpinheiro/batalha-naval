@@ -38,8 +38,8 @@ def cria_partida_banco(id_jogador1: int, id_jogador2: int, current_cursor: Curso
     """[summary]
 
     Args:
-        id_jogador1 (int): Id do jogador 1 da partida.
-        id_jogador2 (int): Id do jogador 2 da partida.
+        id_jogador1 (int): Id do jogador 1 no banco.
+        id_jogador2 (int): Id do jogador 2 no.
         current_cursor (CursorBase): Cursor aberto que executará as queries.
         log (bool, optional): Ativa e desativa o logging. Default é False.
 
@@ -52,7 +52,7 @@ def cria_partida_banco(id_jogador1: int, id_jogador2: int, current_cursor: Curso
         query = f"INSERT INTO Partida(id_jogador1, id_jogador2, n_ultima_jogada, finalizada, vencedor) VALUES ({id_jogador1}, {id_jogador2}, 0, false, -1)"
         current_cursor.execute(query)
         if log:
-            print(current_cursor.rowcount, "Partida inserida")
+            print("Partida inserida")
         return 1
     except Exception as e:
         if log:
@@ -163,7 +163,7 @@ def retorna_partidas(current_cursor: CursorBase, log: bool = False) -> Union[Tup
         return 0
     
 
-def drop_tabela_partida(current_cursor: CursorBase, log: bool = False) -> int:
+def dropa_tabela_partida(current_cursor: CursorBase, log: bool = False) -> int:
     """Deleta a tabela Partida do banco de dados.
 
     Args:
@@ -182,5 +182,6 @@ def drop_tabela_partida(current_cursor: CursorBase, log: bool = False) -> int:
             print(current_cursor.rowcount, "Tabela Partida removida")
         return 1
     except Exception as e:
-        print("Não removeu a Tabela Partida", e)
+        if log:
+            print("Não removeu a Tabela Partida", e)
         return 0
