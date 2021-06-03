@@ -39,7 +39,7 @@ def cria_partida_banco(id_jogador1: int, id_jogador2: int, current_cursor: Curso
 
     Args:
         id_jogador1 (int): Id do jogador 1 no banco.
-        id_jogador2 (int): Id do jogador 2 no.
+        id_jogador2 (int): Id do jogador 2 no banco.
         current_cursor (CursorBase): Cursor aberto que executará as queries.
         log (bool, optional): Ativa e desativa o logging. Default é False.
 
