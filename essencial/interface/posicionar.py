@@ -174,7 +174,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
                 desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), (50, 50, 120), display_interacao)
                 desenha_texto(f"JOGADOR {vez_do_jogador + 1}", caminho_fonte, 20, (-1, 30), (128, 128, 0), a)
                 desenha_texto("Selecione o primeiro quadrado do navio", caminho_fonte, 18, (-1, 80), BRANCO, display_interacao)
-                desenha_texto("Valores aceitos são do tipo a-8, a8, A8, A-8", caminho_fonte, 18, (-1, 100), BRANCO, display_interacao)
+                desenha_texto("Valores aceitos são do tipo a8, A8", caminho_fonte, 18, (-1, 100), BRANCO, display_interacao)
 
                 resultado_atualizacao = entrada_input.update(eventos)
 
@@ -209,9 +209,9 @@ def tela_posiciona_navio(tela, cursor, conexao):
                     elif tab_2[y][x]['estado_visivel'] == "D":
                         desenha_retangulo((53 + 47 * x, 52 + 47 * y), (36, 36), VERMELHO, 0, tabuleiro_2)
 
-            a = desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), BRANCO, display_interacao)
+            a = desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), (50, 50, 120), display_interacao)
             desenha_texto(f"JOGADOR {vez_do_jogador + 1} ataca", caminho_fonte, 20, (-1, 30), (128, 128, 0), a)
-            desenha_texto("Valores aceitos são do tipo a-8, a8, A8, A-8", caminho_fonte, 18, (-1, 100), BRANCO, display_interacao)
+            desenha_texto("Valores aceitos são do tipo a8, A8", caminho_fonte, 18, (-1, 100), BRANCO, display_interacao)
 
             desenha_retangulo((-1, 180), (380, 50), (0, 128, 0), 0, display_interacao)
             desenha_retangulo((-1, 180), (380, 50), BRANCO, 1, display_interacao)
@@ -321,6 +321,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
                     if resultado_ataque == 1:
                         pygame.mixer.Channel(3).play(pygame.mixer.Sound(caminho_som_atingiu_navio))
                         pygame.mixer.Channel(4).play(pygame.mixer.Sound(caminho_som_destruiu_navio))
+                        pygame.mixer.Channel(4).set_volume(0.3)
                         pygame.mixer.Channel(0).stop()
                         finaliza_partida(id_partida, jogador.consulta_jogador(vez_do_jogador)["id_banco"], cursor)
                         time.sleep(1)
@@ -330,17 +331,20 @@ def tela_posiciona_navio(tela, cursor, conexao):
                         pygame.mixer.Channel(3).set_volume(0.3)
                     elif resultado_ataque == 3:
                         pygame.mixer.Channel(4).play(pygame.mixer.Sound(caminho_som_destruiu_navio))
-                        pygame.mixer.Channel(4).set_volume(0.1)
+                        pygame.mixer.Channel(4).set_volume(0.3)
                     elif resultado_ataque == 4:
                         pygame.mixer.Channel(5).play(pygame.mixer.Sound(caminho_som_tiro_agua))
                     if resultado_ataque > 0:
                         vez_do_jogador = 1
+                    if resultado_ataque <= 0:
+                        pygame.mixer.Channel(2).play(pygame.mixer.Sound(caminho_som_erro))
                     atualiza_ultima_rodada(id_partida, retorna_ultima_jogada(jogador.consulta_jogador(0)["id_banco"], jogador.consulta_jogador(1)["id_banco"], cursor), cursor)
                 else:
                     resultado_ataque = jogador.ataca_jogador(1, 0, quadrado_ataque, cursor)
                     if resultado_ataque == 1:
                         pygame.mixer.Channel(3).play(pygame.mixer.Sound(caminho_som_atingiu_navio))
                         pygame.mixer.Channel(4).play(pygame.mixer.Sound(caminho_som_destruiu_navio))
+                        pygame.mixer.Channel(4).set_volume(0.3)
                         pygame.mixer.Channel(0).stop()
                         atualiza_ultima_rodada(id_partida, retorna_ultima_jogada(jogador.consulta_jogador(1)["id_banco"], jogador.consulta_jogador(0)["id_banco"], cursor), cursor)
                         finaliza_partida(id_partida, jogador.consulta_jogador(vez_do_jogador)["id_banco"], cursor)
@@ -351,11 +355,10 @@ def tela_posiciona_navio(tela, cursor, conexao):
                         pygame.mixer.Channel(3).set_volume(0.3)
                     elif resultado_ataque == 3:
                         pygame.mixer.Channel(4).play(pygame.mixer.Sound(caminho_som_destruiu_navio))
-                        pygame.mixer.Channel(4).set_volume(0.1)
+                        pygame.mixer.Channel(4).set_volume(0.3)
                     elif resultado_ataque == 4:
                         pygame.mixer.Channel(5).play(pygame.mixer.Sound(caminho_som_tiro_agua))
                     if resultado_ataque > 0:
                         vez_do_jogador = 0
                     atualiza_ultima_rodada(id_partida, retorna_ultima_jogada(jogador.consulta_jogador(1)["id_banco"], jogador.consulta_jogador(0)["id_banco"], cursor), cursor)
-                print(resultado_ataque)
         atualiza_desenhista()
