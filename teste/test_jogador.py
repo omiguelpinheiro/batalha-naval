@@ -38,12 +38,12 @@ class TestaMetodosJogador:
         assert retorno == -1
 
     def testa__lista_jogadores(self):
-        jog = [{"nome": "a", "navios": [], "placar": 0, "id": 0, "tabuleiro": tabuleiro_fixture, "navios_disponiveis": {0: 0, 1: 0, 2: 0, 3: 2}, "maximo_pontos": 4, "id_banco": 1}]
+        jog = [{"nome": "a", "navios": [], "placar": 0, "id": 0, "tabuleiro": tabuleiro_fixture, "navios_disponiveis": {0: 4, 1: 3, 2: 2, 3: 1}, "maximo_pontos": 30, "id_banco": 1}]
         retorno = jogador._lista_jogadores()
         assert retorno == jog
 
     def testa_consulta_jogador(self):
-        jog = {"nome": "a", "navios": [], "placar": 0, "id": 0, "tabuleiro": tabuleiro_fixture, "navios_disponiveis": {0: 0, 1: 0, 2: 0, 3: 2}, "maximo_pontos": 4, "id_banco": 1}
+        jog = {"nome": "a", "navios": [], "placar": 0, "id": 0, "tabuleiro": tabuleiro_fixture, "navios_disponiveis": {0: 4, 1: 3, 2: 2, 3: 1}, "maximo_pontos": 30, "id_banco": 1}
         retorno = jogador.consulta_jogador(0)
         assert retorno == jog
 
@@ -94,8 +94,8 @@ class TestaMetodosJogador:
         cria_banco(cursor)
         usa_banco(cursor)
         jogador.registra_jogador("Miguel", cursor, con)
-        jogador.posiciona_navio(0, "A-8", "H", 0, cursor)
-        retorno = jogador.posiciona_navio(0, "B-8", "H", 0, cursor)
+        jogador.posiciona_navio(3, "A-8", "H", 0, cursor)
+        retorno = jogador.posiciona_navio(3, "B-8", "H", 0, cursor)
         assert retorno == -4
 
     def teste_posiciona_navio_falha_erro_orientacao_horizontal(self):
@@ -103,7 +103,7 @@ class TestaMetodosJogador:
         cursor = abre_cursor(con)
         cria_banco(cursor)
         usa_banco(cursor)
-        retorno = jogador.posiciona_navio(3, "B-0", "H", 0, cursor)
+        retorno = jogador.posiciona_navio(0, "B-0", "H", 0, cursor)
         assert retorno == -5
 
     def teste_posiciona_navio_falha_erro_orientacao_vertical(self):
@@ -111,7 +111,7 @@ class TestaMetodosJogador:
         cursor = abre_cursor(con)
         cria_banco(cursor)
         usa_banco(cursor)
-        retorno = jogador.posiciona_navio(3, "a-8", "V", 0, cursor)
+        retorno = jogador.posiciona_navio(0, "a-8", "V", 0, cursor)
         assert retorno == -6
 
     def teste_posiciona_navio_sucesso_horizontal(self):
@@ -119,7 +119,7 @@ class TestaMetodosJogador:
         cursor = abre_cursor(con)
         cria_banco(cursor)
         usa_banco(cursor)
-        retorno = jogador.posiciona_navio(3, "C-5", "H", 0, cursor)
+        retorno = jogador.posiciona_navio(0, "C-5", "H", 0, cursor)
         assert retorno == 1
 
     def teste_posiciona_navio_sucesso_vertical(self):
@@ -127,5 +127,5 @@ class TestaMetodosJogador:
         cursor = abre_cursor(con)
         cria_banco(cursor)
         usa_banco(cursor)
-        retorno = jogador.posiciona_navio(3, "H-2", "V", 0, cursor)
+        retorno = jogador.posiciona_navio(0, "H-2", "V", 0, cursor)
         assert retorno == 1

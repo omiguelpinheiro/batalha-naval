@@ -164,8 +164,8 @@ def tela_posiciona_navio(tela, cursor, conexao):
             if selecionou_embarcacao and not selecinou_orientacao:
                 desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), (50, 50, 120), display_interacao)
                 desenha_texto(f"JOGADOR {vez_do_jogador + 1}", caminho_fonte, 20, (-1, 30), (128, 128, 0), a)
-                desenha_texto("Selecione a orientação do navio", caminho_fonte, 18, (-1, 80), BRANCO, display_interacao)
-                desenha_texto("Valores aceitos são V,v,H,h", caminho_fonte, 18, (-1, 100), BRANCO, display_interacao)
+                desenha_texto("Selecione a orientação do navio V,v,H ou h", caminho_fonte, 18, (-1, 80), BRANCO, display_interacao)
+                desenha_texto("É posicionado da esquerda pra direita ou de baixo pra cima ", caminho_fonte, 18, (-1, 100), BRANCO, display_interacao)
 
                 resultado_atualizacao = entrada_input.update(eventos)
                 desenha_campo_texto(entrada_input, (-1, 180), display_interacao)

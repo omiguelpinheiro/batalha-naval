@@ -43,7 +43,7 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
     jogador["navios"] = list()
     jogador["nome"] = nome
     jogador["placar"] = 0
-    jogador["navios_disponiveis"] = {0: 2, 1: 0, 2: 0, 3: 0}
+    jogador["navios_disponiveis"] = {0: 4, 1: 3, 2: 2, 3: 1}
 
     maximo_pontos = 0
     if maximo_pontos == 0:
@@ -160,10 +160,10 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
     if not isinstance(id_navio, int):
         try:
             id_navio = int(id_navio)
-            if id_navio < 0 or id_navio > 3:
-                return 0
         except Exception as e:
             return 0
+    if id_navio < 0 or id_navio > 3:
+                return 0
     
     orientacao = orientacao.upper()
 

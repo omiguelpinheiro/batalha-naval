@@ -3,22 +3,22 @@
    <id_partida>1</id_partida>
    <id_jogador1>1</id_jogador1>
    <id_jogador2>2</id_jogador2>
-   <n_ultima_jogada>8</n_ultima_jogada>
-   <finalizada>1</finalizada>
-   <vencedor>1</vencedor>
+   <n_ultima_jogada>0</n_ultima_jogada>
+   <finalizada>0</finalizada>
+   <vencedor>-1</vencedor>
    <jogador_1>
       <id_jogador>1</id_jogador>
-      <nome>lidia</nome>
-      <navios_tipo_1>0</navios_tipo_1>
-      <navios_tipo_2>0</navios_tipo_2>
-      <navios_tipo_3>0</navios_tipo_3>
-      <navios_tipo_4>0</navios_tipo_4>
+      <nome>a</nome>
+      <navios_tipo_1>4</navios_tipo_1>
+      <navios_tipo_2>3</navios_tipo_2>
+      <navios_tipo_3>2</navios_tipo_3>
+      <navios_tipo_4>1</navios_tipo_4>
       <tamanho_tipo_1>2</tamanho_tipo_1>
       <tamanho_tipo_2>3</tamanho_tipo_2>
       <tamanho_tipo_3>4</tamanho_tipo_3>
       <tamanho_tipo_4>5</tamanho_tipo_4>
-      <placar>4</placar>
-      <maximo_pontos>4</maximo_pontos>
+      <placar>0</placar>
+      <maximo_pontos>30</maximo_pontos>
       <tabuleiro>
          <quadrado_00>
             <id_dono>1</id_dono>
@@ -81,16 +81,16 @@
             <linha>0</linha>
             <coluna>7</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>0</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_07>
          <quadrado_08>
             <id_dono>1</id_dono>
             <linha>0</linha>
             <coluna>8</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>0</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_08>
          <quadrado_09>
             <id_dono>1</id_dono>
@@ -161,16 +161,16 @@
             <linha>1</linha>
             <coluna>7</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>1</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_17>
          <quadrado_18>
             <id_dono>1</id_dono>
             <linha>1</linha>
             <coluna>8</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>1</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_18>
          <quadrado_19>
             <id_dono>1</id_dono>
@@ -824,17 +824,17 @@
    </jogador_1>
    <jogador_2>
       <id_jogador>2</id_jogador>
-      <nome>lidia</nome>
-      <navios_tipo_1>0</navios_tipo_1>
-      <navios_tipo_2>0</navios_tipo_2>
-      <navios_tipo_3>0</navios_tipo_3>
-      <navios_tipo_4>0</navios_tipo_4>
+      <nome>b</nome>
+      <navios_tipo_1>4</navios_tipo_1>
+      <navios_tipo_2>3</navios_tipo_2>
+      <navios_tipo_3>2</navios_tipo_3>
+      <navios_tipo_4>1</navios_tipo_4>
       <tamanho_tipo_1>2</tamanho_tipo_1>
       <tamanho_tipo_2>3</tamanho_tipo_2>
       <tamanho_tipo_3>4</tamanho_tipo_3>
       <tamanho_tipo_4>5</tamanho_tipo_4>
-      <placar>3</placar>
-      <maximo_pontos>4</maximo_pontos>
+      <placar>0</placar>
+      <maximo_pontos>30</maximo_pontos>
       <tabuleiro>
          <quadrado_00>
             <id_dono>2</id_dono>
@@ -897,16 +897,16 @@
             <linha>0</linha>
             <coluna>7</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>0</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_07>
          <quadrado_08>
             <id_dono>2</id_dono>
             <linha>0</linha>
             <coluna>8</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>0</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_08>
          <quadrado_09>
             <id_dono>2</id_dono>
@@ -977,16 +977,16 @@
             <linha>1</linha>
             <coluna>7</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>1</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_17>
          <quadrado_18>
             <id_dono>2</id_dono>
             <linha>1</linha>
             <coluna>8</coluna>
             <n_jogada>0</n_jogada>
-            <estado>H</estado>
-            <id_navio>1</id_navio>
+            <estado>N</estado>
+            <id_navio>-1</id_navio>
          </quadrado_18>
          <quadrado_19>
             <id_dono>2</id_dono>

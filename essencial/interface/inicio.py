@@ -35,10 +35,7 @@ def tela_inicio(tela):
         botao_novo = desenha_retangulo((-1, 500), (200, 50), CINZA, 0, essencial.interface.desenhista.tela)
         texto_novo = desenha_texto(msg_novo, caminho_fonte, 30, (-1, -1), BRANCO, botao_novo)
         
-        botao_carregar = desenha_retangulo((-1, 600), (200, 50), CINZA, 0, essencial.interface.desenhista.tela)
-        texto_carregar = desenha_texto(msg_cont, caminho_fonte, 30, (-1, -1), BRANCO, botao_carregar)
-        
-        botao_sair = desenha_retangulo((-1, 700), (200, 50), CINZA, 0, essencial.interface.desenhista.tela)
+        botao_sair = desenha_retangulo((-1, 100), (200, 50), CINZA, 0, botao_novo)
         texto_sair = desenha_texto(msg_sair, caminho_fonte, 30, (-1, -1), BRANCO, botao_sair)
 
         eventos = pygame.event.get()
@@ -63,11 +60,6 @@ def tela_inicio(tela):
                 pygame.mixer.Channel(0).stop()
                 pygame.mixer.Channel(1).stop()
                 return essencial.interface.desenhista.tela
-
-        if botao_carregar.collidepoint(mouse_x, mouse_y):       
-            botao_carregar = desenha_texto(msg_cont, caminho_fonte, 30, (-1, -1), AMARELO, botao_carregar)
-            if click:
-                return 2
 
         if botao_sair.collidepoint(mouse_x, mouse_y):
             texto_sair = desenha_texto(msg_sair, caminho_fonte, 30, (-1, -1), AMARELO, botao_sair)
