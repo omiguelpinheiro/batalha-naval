@@ -3,22 +3,22 @@
    <id_partida>1</id_partida>
    <id_jogador1>1</id_jogador1>
    <id_jogador2>2</id_jogador2>
-   <n_ultima_jogada>0</n_ultima_jogada>
-   <finalizada>0</finalizada>
-   <vencedor>-1</vencedor>
+   <n_ultima_jogada>2</n_ultima_jogada>
+   <finalizada>1</finalizada>
+   <vencedor>1</vencedor>
    <jogador_1>
       <id_jogador>1</id_jogador>
-      <nome>a</nome>
+      <nome>miguel</nome>
       <navios_tipo_1>0</navios_tipo_1>
       <navios_tipo_2>0</navios_tipo_2>
       <navios_tipo_3>0</navios_tipo_3>
-      <navios_tipo_4>2</navios_tipo_4>
-      <tamanho_tipo_1>5</tamanho_tipo_1>
-      <tamanho_tipo_2>4</tamanho_tipo_2>
-      <tamanho_tipo_3>3</tamanho_tipo_3>
-      <tamanho_tipo_4>2</tamanho_tipo_4>
-      <placar>0</placar>
-      <maximo_pontos>4</maximo_pontos>
+      <navios_tipo_4>0</navios_tipo_4>
+      <tamanho_tipo_1>2</tamanho_tipo_1>
+      <tamanho_tipo_2>3</tamanho_tipo_2>
+      <tamanho_tipo_3>4</tamanho_tipo_3>
+      <tamanho_tipo_4>5</tamanho_tipo_4>
+      <placar>2</placar>
+      <maximo_pontos>2</maximo_pontos>
       <tabuleiro>
          <quadrado_00>
             <id_dono>1</id_dono>
@@ -81,16 +81,16 @@
             <linha>0</linha>
             <coluna>7</coluna>
             <n_jogada>0</n_jogada>
-            <estado>N</estado>
-            <id_navio>-1</id_navio>
+            <estado>H</estado>
+            <id_navio>0</id_navio>
          </quadrado_07>
          <quadrado_08>
             <id_dono>1</id_dono>
             <linha>0</linha>
             <coluna>8</coluna>
             <n_jogada>0</n_jogada>
-            <estado>N</estado>
-            <id_navio>-1</id_navio>
+            <estado>H</estado>
+            <id_navio>0</id_navio>
          </quadrado_08>
          <quadrado_09>
             <id_dono>1</id_dono>
@@ -824,17 +824,17 @@
    </jogador_1>
    <jogador_2>
       <id_jogador>2</id_jogador>
-      <nome>b</nome>
+      <nome>gabriel</nome>
       <navios_tipo_1>0</navios_tipo_1>
       <navios_tipo_2>0</navios_tipo_2>
       <navios_tipo_3>0</navios_tipo_3>
-      <navios_tipo_4>2</navios_tipo_4>
-      <tamanho_tipo_1>5</tamanho_tipo_1>
-      <tamanho_tipo_2>4</tamanho_tipo_2>
-      <tamanho_tipo_3>3</tamanho_tipo_3>
-      <tamanho_tipo_4>2</tamanho_tipo_4>
-      <placar>0</placar>
-      <maximo_pontos>4</maximo_pontos>
+      <navios_tipo_4>0</navios_tipo_4>
+      <tamanho_tipo_1>2</tamanho_tipo_1>
+      <tamanho_tipo_2>3</tamanho_tipo_2>
+      <tamanho_tipo_3>4</tamanho_tipo_3>
+      <tamanho_tipo_4>5</tamanho_tipo_4>
+      <placar>1</placar>
+      <maximo_pontos>2</maximo_pontos>
       <tabuleiro>
          <quadrado_00>
             <id_dono>2</id_dono>
@@ -897,16 +897,16 @@
             <linha>0</linha>
             <coluna>7</coluna>
             <n_jogada>0</n_jogada>
-            <estado>N</estado>
-            <id_navio>-1</id_navio>
+            <estado>H</estado>
+            <id_navio>0</id_navio>
          </quadrado_07>
          <quadrado_08>
             <id_dono>2</id_dono>
             <linha>0</linha>
             <coluna>8</coluna>
             <n_jogada>0</n_jogada>
-            <estado>N</estado>
-            <id_navio>-1</id_navio>
+            <estado>H</estado>
+            <id_navio>0</id_navio>
          </quadrado_08>
          <quadrado_09>
             <id_dono>2</id_dono>

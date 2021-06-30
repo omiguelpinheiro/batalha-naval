@@ -7,7 +7,7 @@ __all__ = ["consulta_jogador", "registra_jogador", "_jogadores"]  # O que será 
 
 
 _jogadores: list = []  # Lista de jogadores registrados até o momento.
-_tamanho_navios: dict = {0: 5, 1: 4, 2: 3, 3: 2}  # Dicionário de pares chave-valor (tipo_navio, tamanho)
+_tamanho_navios: dict = {0: 2, 1: 3, 2: 4, 3: 5}  # Dicionário de pares chave-valor (tipo_navio, tamanho)
 
 
 def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int:
@@ -43,7 +43,7 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
     jogador["navios"] = list()
     jogador["nome"] = nome
     jogador["placar"] = 0
-    jogador["navios_disponiveis"] = {0: 0, 1: 0, 2: 0, 3: 2}
+    jogador["navios_disponiveis"] = {0: 1, 1: 0, 2: 0, 3: 0}
 
     maximo_pontos = 0
     if maximo_pontos == 0:
@@ -64,17 +64,19 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
     tamanho_tipo_3 = _tamanho_navios[2]
     tamanho_tipo_4 = _tamanho_navios[3]
 
-
     navios_tipo_1 = jogador["navios_disponiveis"][0]
     navios_tipo_2 = jogador["navios_disponiveis"][1]
     navios_tipo_3 = jogador["navios_disponiveis"][2]
     navios_tipo_4 = jogador["navios_disponiveis"][3]
-    
 
     result = cria_jogador_banco(jogador["nome"], navios_tipo_1, navios_tipo_2, navios_tipo_3, navios_tipo_4, tamanho_tipo_1, tamanho_tipo_2, tamanho_tipo_3, tamanho_tipo_4, 0, maximo_pontos, cursor)
     if result == 0:
         return -1
-    con.commit()
+    try:
+        con.commit()
+    except Exception as e:
+        return -1
+    
     ultimo_id = le_ultimo_id_jogador(cursor)
     if ultimo_id == -1:
         return -2
@@ -145,16 +147,24 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
     if "-" in quadrado_inicio:
         quadrado_inicio = quadrado_inicio.split("-")
 
+    if len(quadrado_inicio) <= 1 or len(quadrado_inicio) >= 3:
+        return -1
+
     numero_linha = util.converte_letra_numero(quadrado_inicio[0])
     numero_coluna = int(quadrado_inicio[1])
 
-    if id_navio < 0 or id_navio > 3:
-        return 0
+    if not isinstance(id_navio, int):
+        try:
+            id_navio = int(id_navio)
+            if id_navio < 0 or id_navio > 3:
+                return -1
+        except Exception as e:
+            return -1
+
+    orientacao = orientacao.upper()
 
     tamanho_navio = _tamanho_navios[id_navio]
 
-    if len(quadrado_inicio) == 1 or len(quadrado_inicio) == 3:
-        return -1
     if not quadrado_inicio[0].isalpha() or not quadrado_inicio[1].isnumeric():
         return -1
     if orientacao not in ["V", "H"]:
@@ -223,8 +233,9 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str, cursor: Cu
 
     Returns:
         A função retornará:
+            4: Jogador foi atacado com sucesso e atingiu água.
             3: Jogador foi atacado com sucesso e teve um navio destruído.
-            2: Jogador foi atacado com sucesso.
+            2: Jogador foi atacado com sucesso e destruiu uma parte do navio.
             1: jogador foi atacado com sucesso e ocorreu vitória do atacante.
            -1: Coordenada de quadrante inválida.
            -2: Coordenada de quadrante já foi atacada.
@@ -232,9 +243,10 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str, cursor: Cu
            -4: Não criou o quadrado da jogada no banco.
     
     """
+    
     if "-" in coordenada:
-        coordenada = coordenada.split("-")
-    if len(coordenada) == 1 or ((not coordenada[0].isalpha() or not coordenada[1].isnumeric()) and len(coordenada) == 3):
+        coordenada = coordenada.split("-")    
+    if len(coordenada) <= 1 or ((not coordenada[0].isalpha() or not coordenada[1].isnumeric()) and len(coordenada) >= 3):
         return -1
 
     numero_linha = util.converte_letra_numero(coordenada[0])
@@ -262,13 +274,14 @@ def ataca_jogador(id_atacante: int, id_atacado: int, coordenada: str, cursor: Cu
                     return 1
                 elif len(_jogadores[id_atacado]["navios"][i]["ocupando"]) == 0:
                     return 3
+                return 2
     if estado_quadrado == "N":
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado"] = "W"
         _jogadores[id_atacado]["tabuleiro"][numero_linha][numero_coluna]["estado_visivel"] = "W"
         retorno = cria_quadrado_banco(_jogadores[id_atacado]["id_banco"], numero_linha, numero_coluna, retorna_ultima_jogada(_jogadores[0]["id_banco"], _jogadores[1]["id_banco"], cursor) + 1, "W", -1, cursor)
         if retorno == 0:
             return -4
-    return 2
+        return 4
 
 
 def _lista_jogadores() -> list:

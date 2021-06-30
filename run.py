@@ -1,3 +1,6 @@
+import essencial.interface.inicio
+import essencial.interface.desenhista
+
 from essencial import partida
 
 

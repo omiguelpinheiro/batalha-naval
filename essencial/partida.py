@@ -1,13 +1,14 @@
-from essencial.banco.gerador_xml import gera_xml, retorna_banco_como_dicionario
-import time
+import traceback
 
-from essencial import cli, jogador
 from essencial.banco.conector import inicializa_banco, conexao
-from essencial.banco.bd_partida import atualiza_ultima_rodada, finaliza_partida, dropa_tabela_partida, cria_partida_banco, finaliza_partida, le_ultimo_id_partida, retorna_partidas
+from essencial.banco.bd_partida import dropa_tabela_partida, retorna_partidas
 from essencial.banco.bd_jogador import dropa_tabela_jogador, retorna_jogadores
-from essencial.banco.bd_quadrado import dropa_tabela_quadrado, retorna_ultima_jogada, retorna_quadrados
+from essencial.banco.bd_quadrado import dropa_tabela_quadrado, retorna_quadrados
+from essencial.banco.gerador_xml import gera_xml, retorna_banco_como_dicionario
 
-from xml.dom import minidom
+from essencial.interface.inicio import tela_inicio
+from essencial.interface.posicionar import tela_posiciona_navio
+from essencial.interface.vitoria import tela_vitoria
 
 mensagem_inserir_jogador_1 = "Digite o nome do jogador 1: "
 mensagem_inserir_jogador_2 = "Digite o nome do jogador 2: "
@@ -39,143 +40,17 @@ cursor = inicializa_banco(conexao)
 conexao.commit()
 
 def inicia_partida():
+    tela = None
     try:
-        console = cli.inicia_cli()
-
-        cli.escreve_na_tela(0, 0, mensagem_inserir_jogador_1, console)
-        nome_jogador_1 = cli.pede_dado(
-            0, len(mensagem_inserir_jogador_1), 25, console).decode()
-        cli.escreve_na_tela(0, len(mensagem_inserir_jogador_1) +
-                            len(nome_jogador_1), " -> Inserido", console)
-        cli.escreve_na_tela(1, 0, mensagem_inserir_jogador_2, console)
-        nome_jogador_2 = cli.pede_dado(
-            1, len(mensagem_inserir_jogador_2), 25, console).decode()
-        cli.escreve_na_tela(1, len(mensagem_inserir_jogador_2) +
-                            len(nome_jogador_2), " -> Inserido", console)
-
-        cli.limpa_cli(console)
-        jogador.registra_jogador(nome_jogador_1, cursor, conexao)
-        jogador.registra_jogador(nome_jogador_2, cursor, conexao)
-        conexao.commit()
-
-        jogadores = jogador._lista_jogadores()
-
-        id_jogadores[0] = jogadores[0]["id"]
-        id_jogadores[1] = jogadores[1]["id"]
-
-        cria_partida_banco(jogadores[0]["id_banco"], jogadores[1]["id_banco"], cursor)
-        conexao.commit()
-
-        id_partida = le_ultimo_id_partida(cursor)
-
-        for id_jogador in id_jogadores:
-            while True:
-                jog = jogador.consulta_jogador(id_jogador)
-                # Desenha tabuleiro
-                cli.desenha_tabuleiro(jog, 0, 0, console)
-                cli.escreve_na_tela(10, 28, str(id_jogador), console)
-
-                # Desenha mural de embarcações
-                cli.escreve_na_tela(
-                    0, 28, f"Num      Embarcações            Ocupa     Qtd", console)
-                cli.escreve_na_tela(
-                    1, 28, f" 0       Porta-aviões       5 Quadrados    {jog['navios_disponiveis'][0]}", console)
-                cli.escreve_na_tela(
-                    2, 28, f" 1       Navio-tanque       4 Quadrados    {jog['navios_disponiveis'][1]}", console)
-                cli.escreve_na_tela(
-                    3, 28, f" 2     Contratorpedeiro     3 Quadrados    {jog['navios_disponiveis'][2]}", console)
-                cli.escreve_na_tela(
-                    4, 28, f" 3        Submarino         2 Quadrados    {jog['navios_disponiveis'][3]}", console)
-
-                # Desenha mensagem para selecionar embarcação mais prompt de input
-                cli.escreve_na_tela(6, 28, mensagem_selecao_embarcacao, console)
-                navio = cli.pede_dado(
-                    6, 28 + len(mensagem_selecao_embarcacao), 1, console).decode()
-                # Apaga mensagem e prompt acima
-                cli.escreve_na_tela(
-                    6, 28, " " * (len(mensagem_selecao_embarcacao) + 3), console)
-
-                # Desenha mensagem pedindo a orientação e como funciona o posicionamento do navio e o prompt de input
-                cli.escreve_na_tela(6, 28, mensagem_orientacao, console)
-                cli.escreve_na_tela(7, 28, mensagem_explicacao_orientacao, console)
-                orientacao = cli.pede_dado(
-                    6, 28 + len(mensagem_orientacao), 1, console).decode().upper()
-                # Apaga mensagem e prompt acima
-                cli.escreve_na_tela(
-                    6, 28, " " * (len(mensagem_orientacao) + 3), console)
-                cli.escreve_na_tela(
-                    7, 28, " " * (len(mensagem_explicacao_orientacao) + 3), console)
-
-                # Desenha mensagem pedindo o primeiro quadrado que o navio vai ficar e o prompt de input
-                cli.escreve_na_tela(6, 28, mensagem_primeiro_quadrado, console)
-                cli.escreve_na_tela(7, 28, mensagem_exemplo_entrada, console)
-                primeiro_quadrado = cli.pede_dado(
-                    6, 28 + len(mensagem_primeiro_quadrado), 3, console).decode().upper()
-                # Apaga mensagem e prompt cima
-                cli.escreve_na_tela(
-                    6, 28, " " * (len(mensagem_primeiro_quadrado) + 3), console)
-                cli.escreve_na_tela(
-                    7, 28, " " * (len(mensagem_exemplo_entrada) + 3), console)
-
-                retorno = jogador.posiciona_navio(
-                    int(navio), primeiro_quadrado, orientacao, id_jogador, cursor)
-                conexao.commit()
-                if retorno == -1:
-                    cli.escreve_na_tela(8, 28, mensagem_erro_quadrado, console)
-                elif retorno == -2:
-                    cli.escreve_na_tela(8, 28, mensagem_erro_orientacao, console)
-                elif retorno == -4:
-                    cli.escreve_na_tela(8, 28, mensagem_erro_barco_falta, console)
-                elif retorno in [-5, -6]:
-                    cli.escreve_na_tela(
-                        8, 28, mensagem_erro_falta_espaco_tabuleiro, console)
-                elif retorno == -7:
-                    cli.escreve_na_tela(
-                        8, 28, mensagem_erro_sobreposicao_barcos, console)
-                else:
-                    cli.escreve_na_tela(
-                        8, 28, " " * (len(mensagem_erro_barco_falta) + 3), console)
-                conjunto_navios = set(jog["navios_disponiveis"].values())
-                if len(conjunto_navios) == 1 and 0 in conjunto_navios:
-                    break
-
-        while True:
-            atacante = jogador.consulta_jogador(id_jogadores[0])
-            atacado = jogador.consulta_jogador(id_jogadores[1])
-
-            cli.desenha_mapa(jogador.consulta_jogador(0),
-                            jogador.consulta_jogador(1))
-            cli.escreve_na_tela(
-                13, 0, f"Jogador {id_jogadores[0]} | Qual quadrante deseja atacar? (Ex. A-8, h-2, C4 e d7): ", console)
-            coordenada = cli.pede_dado(
-                13, len(mensagem_pede_ataque), 3, console).decode()
-            retorno = jogador.ataca_jogador(
-                id_jogadores[0], id_jogadores[1], coordenada, cursor)
-            atualiza_ultima_rodada(id_partida, retorna_ultima_jogada(atacante["id_banco"], atacado["id_banco"], cursor), cursor)
-            conexao.commit()
-            cli.escreve_na_tela(17, 0, mensagem_erro_quadrado, console)
-            if retorno == -1:
-                cli.escreve_na_tela(14, 0, mensagem_erro_quadrado, console)
-            if retorno == -2:
-                cli.escreve_na_tela(
-                    14, 0, mensagem_erro_quadrado_ja_atacado, console)
-            if retorno == 1:
-                cli.desenha_mapa(jogador.consulta_jogador(0),
-                                jogador.consulta_jogador(1))
-                cli.escreve_na_tela(
-                    13, 0, f"{atacante['nome']} venceu o jogo! Parabéns!", console)
-                finaliza_partida(id_partida, atacante["id_banco"], cursor)
-                conexao.commit()
-                cli.pede_dado(14, 0, 0, console).decode()
-                break
-            if retorno == 3:
-                # Lidar com a explosão de um navio
-                pass
-            indice_0 = id_jogadores.pop(0)
-            id_jogadores.append(indice_0)
-        cli.encerra_cli()
+        para = False
+        while not para:
+            retorno_tela_inicio = tela_inicio(tela)
+            if not isinstance(retorno_tela_inicio, int):
+                tela, vencedor = tela_posiciona_navio(retorno_tela_inicio, cursor, conexao)
+            tela, para = tela_vitoria(tela, vencedor)
     except Exception as e:
         print("Não chegou no final da execução da partida", e)
+        traceback.print_exc()
     finally:
         p = retorna_partidas(cursor)
         q = retorna_quadrados(cursor)
