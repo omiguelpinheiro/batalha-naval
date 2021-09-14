@@ -193,7 +193,7 @@ def retorna_jogadores(current_cursor: CursorBase, log: bool = False) -> List[Tup
 
     """
     try:
-        query = f"SELECT * FROM Jogador"
+        query = 'SELECT * FROM Jogador'
         current_cursor.execute(query)
         columns = [column[0] for column in current_cursor.description]
         rows = [dict(zip(columns, row)) for row in current_cursor.fetchall()]
@@ -218,7 +218,7 @@ def dropa_tabela_jogador(current_cursor: CursorBase, log: bool = False) -> int:
         
     """
     try:
-        query = f"DROP TABLE Jogador"
+        query = 'DROP TABLE Jogador'
         current_cursor.execute(query)
         if log:
             print(current_cursor.rowcount, "Tabela Jogador removida")

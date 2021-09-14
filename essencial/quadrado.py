@@ -27,8 +27,7 @@ def gera_quadrado() -> dict:
         Um quadrado.
 
     """
-    quadrado = {"estado": "N", "estado_visivel": "N"}
-    return quadrado
+    return {"estado": "N", "estado_visivel": "N"}
 
 
 def consulta_estado(quadrado: dict) -> str:
@@ -45,8 +44,7 @@ def consulta_estado(quadrado: dict) -> str:
             W se não tem um navio e foi atacado.
 
     """
-    estado = quadrado["estado"]
-    return estado
+    return quadrado["estado"]
 
 
 def altera_estado(quadrado: dict, novo_estado: str) -> dict:

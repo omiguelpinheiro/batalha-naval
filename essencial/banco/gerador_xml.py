@@ -98,9 +98,7 @@ def gera_xml(dados: Dict) -> int:
              0 se o XML não foi construído.
     """
     try:
-        # root = ET.Element("partidas")
-        i = 0
-        for partida in dados:
+        for i, partida in enumerate(dados):
             par = cria_xml_partida(partida)
             jog_1 = cria_xml_jogador(partida["jogador_1"])
             tab_1 = cria_xml_tabuleiro(partida["jogador_1"]["tabuleiro"])
@@ -118,8 +116,7 @@ def gera_xml(dados: Dict) -> int:
                 os.makedirs("essencial/saves")
             with open(f"essencial/saves/save_{i}.xml", "w") as f:
                 f.write(string_bonita)
-                
-            i += 1
+
         return 1
     except Exception as e:
         print("Não conseguiu salvar os saves rsrs", e)
@@ -139,36 +136,43 @@ def retorna_banco_como_dicionario(partidas: List[Tuple], jogadores: List[Tuple],
             0 caso alguma coisa tenha dado errado.
     """
     try:
-        data = list()
+        data = []
 
-        p = 0
         j = 0
         q = 0
 
-        while p < len(partidas):
-            partida = dict()
-            partida["id_partida"] = partidas[p]["id_partida"]
-            partida["id_jogador1"] = partidas[p]["id_jogador1"]
-            partida["id_jogador2"] = partidas[p]["id_jogador2"]
-            partida["n_ultima_jogada"] = partidas[p]["n_ultima_jogada"]
-            partida["finalizada"] = partidas[p]["finalizada"]
-            partida["vencedor"] = partidas[p]["vencedor"]
+        for partida_ in partidas:
+            partida = {
+                'id_partida': partida_["id_partida"],
+                'id_jogador1': partida_["id_jogador1"],
+                'id_jogador2': partida_["id_jogador2"],
+                'n_ultima_jogada': partida_["n_ultima_jogada"],
+                'finalizada': partida_["finalizada"],
+                'vencedor': partida_["vencedor"],
+            }
+
             while j < len(jogadores):
-                if jogadores[j]["id_jogador"] == partidas[p]["id_jogador1"]:
+                if jogadores[j]["id_jogador"] == partida_["id_jogador1"]:
                     partida["jogador_1"] = jogadores.pop(j)
                     partida["jogador_1"]["tabuleiro"] = gera_tabuleiro_vazio()
                     while q < len(quadrados):
-                        if quadrados[q]["id_dono"] == partidas[p]["id_jogador1"] and quadrados[q]["n_jogada"] == 0:
+                        if (
+                            quadrados[q]["id_dono"] == partida_["id_jogador1"]
+                            and quadrados[q]["n_jogada"] == 0
+                        ):
                             quadrado = quadrados.pop(q)
                             partida["jogador_1"]["tabuleiro"][int(quadrado["linha"])][int(quadrado["coluna"])] = quadrado
                         else:
                             q += 1
                     q = 0
-                elif jogadores[j]["id_jogador"] == partidas[p]["id_jogador2"]:
+                elif jogadores[j]["id_jogador"] == partida_["id_jogador2"]:
                     partida["jogador_2"] = jogadores.pop(j)
                     partida["jogador_2"]["tabuleiro"] = gera_tabuleiro_vazio()
                     while q < len(quadrados):
-                        if quadrados[q]["id_dono"] == partidas[p]["id_jogador2"] and quadrados[q]["n_jogada"] == 0:
+                        if (
+                            quadrados[q]["id_dono"] == partida_["id_jogador2"]
+                            and quadrados[q]["n_jogada"] == 0
+                        ):
                             quadrado = quadrados.pop(q)
                             partida["jogador_2"]["tabuleiro"][int(quadrado["linha"])][int(quadrado["coluna"])] = quadrado
                         else:
@@ -178,8 +182,6 @@ def retorna_banco_como_dicionario(partidas: List[Tuple], jogadores: List[Tuple],
                     j += 1
             j = 0
             data.append(partida)
-            p += 1
-
         return data
     except Exception as e:
         return 0

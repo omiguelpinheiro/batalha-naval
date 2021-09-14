@@ -68,11 +68,11 @@ def tela_posiciona_navio(tela, cursor, conexao):
     id_jogadores = [None, None]
     id_partida = None
     vez_do_jogador = 0
-    
+
     embarcacao = None
     orientacao = None
     primeiro_quadrado = None
-    
+
     jogador_atual = None
 
     registra_jogador_resultado = None
@@ -90,7 +90,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
     pygame.mixer.init()
     pygame.mixer.Channel(0).play(pygame.mixer.Sound(caminho_musica_partida))
     pygame.mixer.Channel(0).set_volume(0.15)
-    
+
     while True:
         eventos = pygame.event.get()
 
@@ -131,7 +131,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
 
             display_navios = desenha_retangulo((50, 180), (500, 250), CINZA, 0, tela)
             desenha_retangulo((50, 180), (500, 250), BRANCO, 1, tela)
-        
+
             desenha_texto(msg_titulo, caminho_fonte, 40, (-1, 40), BRANCO, tela)
 
             desenha_imagem(caminho_j1_submarino, (10, 10), (62, 31), display_navios)
@@ -152,7 +152,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
             desenha_retangulo((-1, 180), (380, 50), (0, 128, 0), 0, display_interacao)
             desenha_retangulo((-1, 180), (380, 50), BRANCO, 1, display_interacao)
 
-            if criou_partida and not selecionou_embarcacao:
+            if not selecionou_embarcacao:
                 a = desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), (50, 50, 120), display_interacao)
                 desenha_texto(f"JOGADOR {vez_do_jogador + 1}", caminho_fonte, 20, (-1, 30), (128, 128, 0), a)
                 desenha_texto("Selecione a embarcação que deseja posicionar", caminho_fonte, 18, (-1, 80), BRANCO, display_interacao)
@@ -160,7 +160,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
 
                 resultado_atualizacao = entrada_input.update(eventos)
                 desenha_campo_texto(entrada_input, (-1, 180), display_interacao)      
-            
+
             if selecionou_embarcacao and not selecinou_orientacao:
                 desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), (50, 50, 120), display_interacao)
                 desenha_texto(f"JOGADOR {vez_do_jogador + 1}", caminho_fonte, 20, (-1, 30), (128, 128, 0), a)
@@ -169,7 +169,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
 
                 resultado_atualizacao = entrada_input.update(eventos)
                 desenha_campo_texto(entrada_input, (-1, 180), display_interacao)
-            
+
             if selecinou_orientacao and not selecionou_primeiro_quadrado:
                 desenha_texto("TELA DE ENTRADA", caminho_fonte, 20, (-1, 10), (50, 50, 120), display_interacao)
                 desenha_texto(f"JOGADOR {vez_do_jogador + 1}", caminho_fonte, 20, (-1, 30), (128, 128, 0), a)
@@ -179,10 +179,10 @@ def tela_posiciona_navio(tela, cursor, conexao):
                 resultado_atualizacao = entrada_input.update(eventos)
 
                 desenha_campo_texto(entrada_input, (-1, 180), display_interacao)
-        
+
         if navios_posicionados:
             desenha_imagem(caminho_fundo, (0, 0), (1920, 1080), tela)
-        
+
             tabuleiro_1 = desenha_imagem(caminho_tabuleiro, (330, 150), (2/3*774, 2/3*774), tela)
             tabuleiro_2 = desenha_imagem(caminho_tabuleiro, (1046, 150), (2/3*774, 2/3*774), tela)
 
@@ -219,13 +219,13 @@ def tela_posiciona_navio(tela, cursor, conexao):
             resultado_atualizacao = entrada_input.update(eventos)
 
             desenha_campo_texto(entrada_input, (-1, 180), display_interacao)
-        
-        if registra_jogador_resultado == -1 or registra_jogador_resultado == -2:
+
+        if registra_jogador_resultado in [-1, -2]:
             pop_up_erro = desenha_retangulo((0, 300), (400, 120), VERMELHO, 0, pop_up)
             desenha_retangulo((-1, -1), (400, 120), BRANCO, 1, pop_up_erro)
             desenha_texto("ERRO", caminho_fonte, 30, (-1, 10), BRANCO, pop_up_erro)
             desenha_texto("Problema de conxão com o banco de dados!", caminho_fonte, 22, (-1, 60), BRANCO, pop_up_erro)
-        
+
         if posiciona_navio_resultado < 1:
             pop_up_erro = desenha_retangulo((-1, 300), (400, 120), VERMELHO, 0, display_interacao)
             desenha_retangulo((-1, -1), (400, 120), BRANCO, 1, pop_up_erro)
@@ -244,9 +244,9 @@ def tela_posiciona_navio(tela, cursor, conexao):
                 desenha_texto("Faltou espaço na vertical!", caminho_fonte, 22, (-1, 60), BRANCO, pop_up_erro)
             elif posiciona_navio_resultado == -7:
                 desenha_texto("Houve sobreposição de navios!", caminho_fonte, 22, (-1, 60), BRANCO, pop_up_erro)
-            elif posiciona_navio_resultado == -8 or posiciona_navio_resultado == -9:
+            elif posiciona_navio_resultado in [-8, -9]:
                 desenha_texto("Problema de conexão com o banco de dados!", caminho_fonte, 22, (-1, 60), BRANCO, pop_up_erro)
-        
+
         if resultado_ataque <= 0:
             pop_up_erro = desenha_retangulo((600, -1), (400, 120), VERMELHO, 0, display_interacao)
             desenha_retangulo((-1, -1), (400, 120), BRANCO, 1, pop_up_erro)
@@ -261,15 +261,14 @@ def tela_posiciona_navio(tela, cursor, conexao):
                 desenha_texto("Problema de conexão com o banco de dados!", caminho_fonte, 22, (-1, 60), BRANCO, pop_up_erro)
 
         for evento in eventos:
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-    
+
             if evento.type == pygame.MOUSEBUTTONUP:
                 click = True
 
@@ -279,7 +278,7 @@ def tela_posiciona_navio(tela, cursor, conexao):
                 entrada_nome.clear_text()
                 if registra_jogador_resultado == 1:
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound(caminho_som_confirmacao))
-                    jogadores_registrados = jogadores_registrados + 1
+                    jogadores_registrados += 1
                     if jogadores_registrados == 2:
                         registrou_jogadores = True
                 else:
@@ -295,17 +294,17 @@ def tela_posiciona_navio(tela, cursor, conexao):
             elif selecinou_orientacao and not selecionou_primeiro_quadrado and not navios_posicionados:
                 primeiro_quadrado = entrada_input.get_text()
                 entrada_input.clear_text()
-                
+
                 selecionou_embarcacao = False
                 selecinou_orientacao = False
                 selecionou_primeiro_quadrado = False
-                
+
                 posiciona_navio_resultado = jogador.posiciona_navio(embarcacao, primeiro_quadrado, orientacao, vez_do_jogador, cursor)
                 if posiciona_navio_resultado == 1:
                     pygame.mixer.Channel(1).play(pygame.mixer.Sound(caminho_som_confirmacao))
                 else:
                     pygame.mixer.Channel(2).play(pygame.mixer.Sound(caminho_som_erro))
-                
+
                 conjunto_navios = set(jogador_atual["navios_disponiveis"].values())
                 if len(conjunto_navios) == 1 and 0 in conjunto_navios:
                     if vez_do_jogador == 0:

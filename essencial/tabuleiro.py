@@ -33,5 +33,7 @@ def gera_tabuleiro_vazio() -> Dict:
         Dict: Tabuleiro vazio.
         
     """
-    tabuleiro = [[{} for coluna in range(quadrado.consulta_numero_colunas())] for linha in range(quadrado.consulta_numero_linhas())]
-    return tabuleiro
+    return [
+        [{} for coluna in range(quadrado.consulta_numero_colunas())]
+        for linha in range(quadrado.consulta_numero_linhas())
+    ]

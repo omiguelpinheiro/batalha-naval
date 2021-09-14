@@ -150,7 +150,7 @@ def retorna_partidas(current_cursor: CursorBase, log: bool = False) -> Union[Tup
 
     """
     try:
-        query = f"SELECT * FROM Partida"
+        query = 'SELECT * FROM Partida'
         current_cursor.execute(query)
         columns = [column[0] for column in current_cursor.description]
         rows = [dict(zip(columns, row)) for row in current_cursor.fetchall()]
@@ -176,7 +176,7 @@ def dropa_tabela_partida(current_cursor: CursorBase, log: bool = False) -> int:
              
     """
     try:
-        query = f"DROP TABLE Partida"
+        query = 'DROP TABLE Partida'
         current_cursor.execute(query)
         if log:
             print(current_cursor.rowcount, "Tabela Partida removida")

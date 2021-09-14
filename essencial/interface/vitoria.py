@@ -26,29 +26,28 @@ def tela_vitoria(tela, vencedor):
     pygame.mixer.Channel(0).play(pygame.mixer.Sound(caminho_som_vitoria))
     while True:
         msg_vitoria = f"Parabéns, {vencedor}! Você venceu."
-        
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         desenha_imagem(caminho_fundo, (0, 0), (1920, 1080), tela)
         desenha_texto(msg_vitoria, caminho_fonte, 60, (-1, 240), BRANCO, tela)
-        
+
         botao_novo = desenha_retangulo((-1, 500), (200, 50), CINZA, 0, tela)
         texto_novo = desenha_texto(msg_novo, caminho_fonte, 30, (-1, -1), BRANCO, botao_novo)
-        
+
         botao_sair = desenha_retangulo((-1, 600), (200, 50), CINZA, 0, tela)
         texto_sair = desenha_texto(msg_sair, caminho_fonte, 30, (-1, -1), BRANCO, botao_sair)
-        
+
         eventos = pygame.event.get()
         for evento in eventos:
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-    
+
             if evento.type == pygame.MOUSEBUTTONUP:
                 click = True
 

@@ -88,7 +88,7 @@ class TestaMetodosBdJogador:
         cursor = abre_cursor(con)
         usa_banco(cursor)
         retorno = retorna_jogador(2, cursor)
-        assert retorno == None
+        assert retorno is None
     
     def testa_retorna_jogador_sucesso(self):
         con = conecta_servidor()

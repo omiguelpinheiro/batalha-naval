@@ -62,4 +62,3 @@ def inicia_partida():
         dropa_tabela_partida(cursor)
         dropa_tabela_quadrado(cursor)
         dropa_tabela_jogador(cursor)
-        pass

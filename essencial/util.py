@@ -22,8 +22,7 @@ def converte_letra_numero(let: str) -> int:
         return -1
     letra_numero = _recebe_dicionario_letra_numero()
     let = let.upper()
-    numero = letra_numero[let]
-    return numero
+    return letra_numero[let]
 
 
 def converte_numero_letra(numero: int) -> str:
@@ -42,8 +41,7 @@ def converte_numero_letra(numero: int) -> str:
         return "!"
     numero_letra = _recebe_dicionario_numero_letra()
     numero = numero
-    letra = numero_letra[numero]
-    return letra
+    return numero_letra[numero]
 
 
 def _recebe_dicionario_letra_numero() -> dict:
@@ -54,8 +52,7 @@ def _recebe_dicionario_letra_numero() -> dict:
 
     """
 
-    letra_numero = _dicionario_letra_numero
-    return letra_numero
+    return _dicionario_letra_numero
 
 
 def _recebe_dicionario_numero_letra() -> dict:
@@ -66,8 +63,7 @@ def _recebe_dicionario_numero_letra() -> dict:
 
     """
 
-    numero_letra = _dicionario_numero_letra
-    return numero_letra
+    return _dicionario_numero_letra
 
 
 def _cria_dicionario_letra_numero():
@@ -79,13 +75,9 @@ def _cria_dicionario_letra_numero():
         Um dicionario que mapeia de uma letra para um número.
 
     """
-    dicionario_letra_numero = dict()
     letras = string.ascii_uppercase
 
-    for indice, letra in enumerate(letras):
-        dicionario_letra_numero[letra] = indice
-
-    return dicionario_letra_numero
+    return {letra: indice for indice, letra in enumerate(letras)}
 
 
 def _cria_dicionario_numero_letra():
@@ -97,13 +89,9 @@ def _cria_dicionario_numero_letra():
         Um dicionário que mapeia de um número para uma letra.
 
     """
-    dicionario_numero_letra = dict()
     letras = string.ascii_uppercase
 
-    for indice, letra in enumerate(letras):
-        dicionario_numero_letra[indice] = letra
-
-    return dicionario_numero_letra
+    return {indice: letra for indice, letra in enumerate(letras)}
 
 
 _dicionario_numero_letra = _cria_dicionario_numero_letra()

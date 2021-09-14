@@ -39,11 +39,12 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
     """
     jogadores = _lista_jogadores()
 
-    jogador = dict()
-    jogador["navios"] = list()
-    jogador["nome"] = nome
-    jogador["placar"] = 0
-    jogador["navios_disponiveis"] = {0: 4, 1: 3, 2: 2, 3: 1}
+    jogador = {
+        'navios': [],
+        'nome': nome,
+        'placar': 0,
+        'navios_disponiveis': {0: 4, 1: 3, 2: 2, 3: 1},
+    }
 
     maximo_pontos = 0
     if maximo_pontos == 0:
@@ -76,7 +77,7 @@ def registra_jogador(nome: str, cursor: CursorBase, con: MySQLConnection) -> int
         con.commit()
     except Exception as e:
         return -1
-    
+
     ultimo_id = le_ultimo_id_jogador(cursor)
     if ultimo_id == -1:
         return -2
@@ -153,7 +154,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
         int(quadrado_inicio[1])
     except Exception as e:
         return -1
-    
+
     numero_linha = util.converte_letra_numero(quadrado_inicio[0])
     numero_coluna = int(quadrado_inicio[1])
 
@@ -164,7 +165,7 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
             return 0
     if id_navio < 0 or id_navio > 3:
                 return 0
-    
+
     orientacao = orientacao.upper()
 
     tamanho_navio = _tamanho_navios[id_navio]
@@ -182,16 +183,15 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
     if util.converte_letra_numero(quadrado_inicio[0]) + 1 - tamanho_navio < 0 and orientacao == "V":
         return -6
 
-    coordenada_navio = list()
-        
-    if orientacao == "V":
-        for parte in range(tamanho_navio):
-            coordenada_navio.append([numero_linha - parte, numero_coluna])
-    elif orientacao == "H":
-        for parte in range(tamanho_navio):
+    coordenada_navio = []
+
+    for parte in range(tamanho_navio):
+        if orientacao == "H":
             coordenada_navio.append([numero_linha, numero_coluna - parte])
 
 
+        elif orientacao == "V":
+            coordenada_navio.append([numero_linha - parte, numero_coluna])
     for navio in _jogadores[id_jogador]["navios"]:
        for parte in navio["ocupando"]:
           if parte in coordenada_navio:
@@ -211,14 +211,6 @@ def posiciona_navio(id_navio: int, quadrado_inicio: str, orientacao: str, id_jog
             quadrado_novo = quadrado.altera_estado(quadrado_original, "H")
             _jogadores[id_jogador]["tabuleiro"][numero_linha - parte][numero_coluna] = quadrado_novo
             retorno = atualiza_quadrado(_jogadores[id_jogador]["id_banco"], numero_linha - parte, numero_coluna, 0, "H", len(_jogadores[id_jogador]["navios"]) - 1, cursor)
-            if retorno == 0:
-                return -9
-    elif orientacao == "H":
-        for parte in range(tamanho_navio):
-            quadrado_original = _jogadores[id_jogador]["tabuleiro"][numero_linha][numero_coluna - parte]
-            quadrado_novo = quadrado.altera_estado(quadrado_original, "H")
-            _jogadores[id_jogador]["tabuleiro"][numero_linha][numero_coluna - parte] = quadrado_novo
-            retorno = atualiza_quadrado(_jogadores[id_jogador]["id_banco"], numero_linha, numero_coluna - parte, 0, "H", len(_jogadores[id_jogador]["navios"]) - 1, cursor)
             if retorno == 0:
                 return -9
     return 1
@@ -299,8 +291,7 @@ def _lista_jogadores() -> list:
         list: Lista dos jogadores registrados atualmente.
 
     """
-    jogadores = _jogadores
-    return jogadores
+    return _jogadores
 
 
 def _registra_tabuleiro(jogador: dict, cursor: CursorBase):

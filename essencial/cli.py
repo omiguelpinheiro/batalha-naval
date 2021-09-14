@@ -27,8 +27,6 @@ def desenha_tabuleiro(j, inicial_x, inicial_y, console, esconde_navios=False):
                 console.addstr(2 + y + inicial_y, 3 + x * 2 + inicial_x, f" {tabuleiro[y][x]['estado_visivel']}")
             else:
                 console.addstr(2 + y + inicial_y, 3 + x * 2 + inicial_x, f" {tabuleiro[y][x]['estado']}")
-            if y == len(tabuleiro) and x == len(linha):
-                pass
     console.refresh()
 
 
